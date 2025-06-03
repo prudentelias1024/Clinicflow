@@ -82,7 +82,7 @@ MIDDLEWARE = [
 
 
 ]
-
+    
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
@@ -121,21 +121,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 #         'PORT': '3306'
 #     }
 # }
-# DATABASES = {
-#     'default': {
-#         'NAME': '4432838_lms',
-#         'USER': '4432838_lms',
-#         'PASSWORD': 'Medicalautomation1024',
-#         'HOST': 'fdb1034.awardspace.net',
-#         'PORT': '3306'
-#     }
-# }
+
 DATABASES = {
     'default': {
-        'NAME': 'if0_35844381_lmr',
-        'USER': 'if0_35844381',
-        'PASSWORD': 's0igmm5oDAh',
-        'HOST': 'sql307.infinityfree.com',
+        'ENGINE': 'django.db.backends.mysql', 
+        'NAME': 'LMR',
+        'USER': 'Elias1024',
+        'PASSWORD': 'bukola13',
+        'HOST': 'Elias1024.mysql.pythonanywhere-services.com',
         'PORT': '3306'
     }
 }

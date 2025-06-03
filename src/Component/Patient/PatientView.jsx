@@ -1,10 +1,8 @@
-import React, {useEffect, useState} from 'react'
-import moment from 'moment'
 import axios from 'axios'
 
 export default function PatientView({user,onAdd, onAdded}) {
   const addAsPatient = async() => {
-    const res = await (await axios.put('http://localhost:8000/api/patients/my/add',{userId: user.three_fa_id } ,{headers: {Authorization: localStorage.getItem('access-token')}})).data
+     await (await axios.put('http://localhost:8000/api/patients/my/add',{userId: user.three_fa_id } ,{headers: {Authorization: localStorage.getItem('access-token')}})).data
     onAdd()
     onAdded()
 

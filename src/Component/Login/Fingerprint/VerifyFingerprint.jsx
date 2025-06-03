@@ -4,7 +4,6 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 export default function VerifyFingerprint() {
     const fingerprintRef = useRef()
-    const [fingerprint, setFingerprint] = useState(null)
     const [verificationError, setVerificationError] = useState(null)
     const navigate = useNavigate()
     const chooseFingerprintImage = () => {
@@ -14,11 +13,11 @@ export default function VerifyFingerprint() {
         const formData = new FormData()
         formData.append('fingerprint_image',fingerprintRef.current.files[0],fingerprintRef.current.files[0].name)
         const res = (await axios.post('http://localhost:8000/api/fingerprint/verifyUser', formData)).data
-        if(res.status == 200){
+        if(res.status === 200){
             localStorage.setItem('access-token', res.access_token)
             navigate('/Dashboard')
         }
-        if(res.status == 401){
+        if(res.status === 401){
             setVerificationError('Wrong fingerprint Uploaded. Upload the Fingerprint Image that was assigned to you during Enrolling')
         }
         

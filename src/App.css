@@ -1212,6 +1212,10 @@ video {
   font-family: Sen;
 }
 
+.font-\[poppins\] {
+  font-family: poppins;
+}
+
 .text-2xl {
   font-size: 1.5rem;
   line-height: 2rem;
@@ -1385,6 +1389,18 @@ video {
   font-family: Poppins;
 
   src: url('./fonts/Poppins/Poppins-Regular.ttf');
+}
+
+@font-face {
+  font-family: Outfit;
+
+  src: url('./fonts/Outfit-Regular.ttf');
+}
+
+@font-face {
+  font-family: Sen;
+
+  src: url('./fonts/sen/Sen-Regular.ttf');
 }
 
 @media (min-width: 1024px) {

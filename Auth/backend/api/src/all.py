@@ -5,7 +5,12 @@ from .enhancement import histogramEqualizer, check_dark_background
 from PIL import Image, ImageDraw
 import random
 import shutil
+from supabase import create_client, Client
 
+url = "https://ayijrjypaegwqtvtzfho.supabase.com"
+key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF5aWpyanlwYWVnd3F0dnR6ZmhvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0ODk1MjM5OCwiZXhwIjoyMDY0NTI4Mzk4fQ.GeVnAQ7anc6yLRn6ex8nRFNy2yskILrCSFO8sRtCECA"
+
+supabase: Client = create_client(url, key)
 
 def face_detection(input_img):
     input_img = cv2.cvtColor(input_img,cv2.COLOR_BGR2GRAY)
@@ -19,21 +24,19 @@ def face_detection(input_img):
             break
     else: 
         return (), False
-    # cv2.imwrite(r'C:\Users\ADMIN\PycharmProjects\Artificial Intelligence\Face Attendance Marker\HBS\HRS-3FA\hbs\Auth\backend\api\src\tests.jpeg',input_img)
+   
     return input_img, True
 
 def enrol_face(input_img,user_id):
-    # image_enrolled = 0
-    dataset_base_path = "C:\\Users\\ADMIN\\PycharmProjects\\hrs-3fa\\hbs\\Auth\\backend\\Datasets\\Face\\"+ str(user_id)+ '\\'
+    image_enrolled = 0
+    image_path = str(user_id)  +  '/img_00'+  str(image_enrolled) + '.jpeg'
+    
+    #upload image
+    supabase.storage.from_('faces').upload(file=input_img,path=image_path)
+    
+    
  
- 
-    #prepare and check folder
-    if not  os.path.exists(dataset_base_path):
-        os.makedirs(dataset_base_path)
-        image_enrolled = len(os.listdir(dataset_base_path))
-    else:
-          image_enrolled = len(os.listdir(dataset_base_path))
-      
+    
     # check if the face is detected in the image and if the image has a good background
     input_img, status = face_detection(input_img)
     
@@ -75,15 +78,37 @@ def recognize_user(input_img):
 
  
 def train_model():
-     faces, faceID = labeller()
+     faces, faceID = supabase_labeller()
      face_recognizer = cv2.face.LBPHFaceRecognizer_create()   
      print('Training started .......')
      face_recognizer.train(np.array(faces) ,np.array(faceID))
      face_recognizer.save(r"C:\\Users\\ADMIN\\PycharmProjects\\hrs-3fa\\hbs\\Auth\\backend\\api\\src\\training_data.yml")
      print('Training Completed .......')
      
+ 
+def supabase_labeller(user_id):
+    faces = []
+    faceImg = []
+    faceID = []
+    #get all files
+    files = (supabase.storage.from_("faces").list(user_id))
+    for file in files:
+        with open("../../Datasets/Face/"+ str(file), "wb+") as f:
+            response = (supabase.storage.from_("avatars").download(
+                str(user_id)+ "/"+ str(file)
+            )
+        )
+            f.write(response)
 
-     
+    dataset_base_path = "../../Datasets/Face/"     
+    for path,subdirname, filenames in os.walk(dataset_base_path):
+         for filename in filenames:
+            id = os.path.basename(path)
+            img_path = os.path.join(path,filename)
+            test_img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
+            faces.append(test_img)
+            faceID.append(int(id))
+    return faces, faceID
 
 
 def labeller():

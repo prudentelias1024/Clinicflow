@@ -1,14 +1,8 @@
 import axios from 'axios';
-import React, { useState } from 'react'
-import { useEffect } from 'react';
+import React from 'react'
 import { IoIosFingerPrint } from 'react-icons/io'
-import {  RiCheckboxCircleFill } from "react-icons/ri";
-import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 export default function Fingerprint() {
-    const [scannerConnected, setScannerConnected] = useState(false)
-    const [fingerScanned, setFingerScanned] = useState(false)
-    const [verified, setVerified] = useState(false)
     const navigate = useNavigate()
     const generateFingerprint = async() => {
       try{
@@ -20,7 +14,7 @@ export default function Fingerprint() {
       link.setAttribute('download','fingerprint.jpg')
       link.click()
       setTimeout(() => {
-        if(res.status == 200){
+        if(res.status === 200){
           navigate('/Dashboard/settings')
         }
     
@@ -29,12 +23,7 @@ export default function Fingerprint() {
         console.error('Error fetching file', err)
       }
     }
-    useEffect(() => {
-        setScannerConnected(false)
-        setFingerScanned(false)
-        setVerified(false)
-    },[])
-  return (
+   return (
     <>
     <div className='flex flex-col gap-[1.5em] pt-[3em] '>
             <IoIosFingerPrint className='text-7xl text-pink-600 m-auto'></IoIosFingerPrint>

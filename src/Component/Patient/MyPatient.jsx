@@ -1,6 +1,5 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
-import EditMedicalInfo from '../Dashboard/Medical Info/EditMedicalInfo';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 
@@ -8,7 +7,7 @@ export default function MyPatient({user,onAdd, onRemove}) {
   const currentUser =  useSelector(state => state.currentUser)
   const navigate = useNavigate()
   const removePatient = async() => {
-    const res = await (await axios.put('http://localhost:8000/api/patients/my/remove',{userId: user.three_fa_id } ,{headers: {Authorization: localStorage.getItem('access-token')}})).data
+    await (await axios.put('http://localhost:8000/api/patients/my/remove',{userId: user.three_fa_id } ,{headers: {Authorization: localStorage.getItem('access-token')}})).data
     onAdd()
     onRemove()
 

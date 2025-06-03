@@ -18,7 +18,7 @@ export default function Appointments() {
     const user = useSelector(state => state.currentUser)
     const getDoneAppointments = async() => {
       let url = ''
-      if(user&& user.type == 'doctor'){
+      if(user && user.type == 'doctor'){
         url = 'http://localhost:8000/api/appointments/done/my'
        }else{
          url = 'http://localhost:8000/api/appointments/done'

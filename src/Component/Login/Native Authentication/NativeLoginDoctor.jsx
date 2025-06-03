@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 
 import Lasulogo from '../../../lasu.jpeg'
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Link,  useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import {  actions } from "../../../store";
 import { useDispatch } from 'react-redux';

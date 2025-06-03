@@ -5,7 +5,8 @@ from .serializer import UserSerializer,AppointmentSerializer,DoctorSerializer,Me
 from django.conf import settings
 from rest_framework.response import Response
 from django.utils import timezone
-import bcrypt
+import pyrebase
+
 from PIL import Image
 from .src import all
 import base64
@@ -16,9 +17,14 @@ from django.http import  HttpResponse
 import os
 import mimetypes
 from pathlib import Path
+
 # Create your views here.
 
 from rest_framework.decorators import api_view
+
+
+from supabase import create_client, Client
+from supabase.lib.client_options import ClientOptions
 
 def authenticator(req):
     if req.META.get('HTTP_AUTHORIZATION') != None:
@@ -54,47 +60,7 @@ def authenticator(req):
         except Doctor.DoesNotExist:
                 return True
         
-@api_view(['POST'])
-def native_login(req):
-    print(req.data)
-    email = req.data['email']
-    password = req.data['password'].encode('utf-8')
-    try:
-       user =  User.objects.get(email=email)
-       user = UserSerializer(user).data
-    except User.DoesNotExist:
-             return Response({"emailError":'User does not exist'})
-    hashed_password = user['password'].replace('b\'','').replace('\'','').encode('utf-8')
-    if bcrypt.checkpw(password, hashed_password):
-            token = jwt.encode({'user_id':user['user_id']}, settings.APP_SECRET_KEY)
-            return Response({"user": user, "access_token": token})
-    
-      
-            
-    else:
-        return Response({"passwordError": "Password Incorrect"})
-    
 
-
-
-@api_view(['POST'])
-def native_register(req):
-    if req.method == 'POST':
-            password = req.data['password'].encode('utf-8')
-            password = bcrypt.hashpw(password, bcrypt.gensalt())
-   
-            user = User(
-                full_name=req.data['full_name'],
-                email=req.data['email'],
-                dob=req.data['dob'],
-                address=req.data['address'],
-                phone_no=req.data['phone_no'],
-                gender=req.data['gender'],
-                profile_img=req.data['profile_img'],
-                password=password,
-                        )
-            user.save()
-            return Response({'status':200})
 
 
 @api_view(['POST'])

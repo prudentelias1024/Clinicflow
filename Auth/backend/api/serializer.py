@@ -8,7 +8,6 @@ class UserSerializer(serializers.Serializer):
     phone_no = serializers.IntegerField()
     profile_img = serializers.ImageField()
     password = serializers.CharField(max_length=50)
-
     gender = serializers.CharField(max_length=6)
     address = serializers.CharField(max_length=200)
     enrolled_face = serializers.BooleanField(allow_null=True)
