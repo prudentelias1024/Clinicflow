@@ -27,7 +27,7 @@ const userRouter = require('./routes/userRoutes')
 
 let URL;
 if (process.env.NODE_ENV == 'production') {
-    URL = "https://writeup.vercel.app"
+    URL = "https://hrs-flame.vercel.app"
   }else{
     URL = "http://localhost:3000"
            

@@ -121,7 +121,7 @@ export default function Dashboard() {
     },[user])
     
     if(user){
-     if( user.type !== 'patient'){
+     if( user.type === 'patient'){
     return (
       
     <div className='flex flex-row  font-[Outfit] bg-[#fafbfb] justify-between h-full'>
