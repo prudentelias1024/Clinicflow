@@ -18,6 +18,7 @@ import moment from 'moment'
 export default function Dashboard() {
   
   const user = useSelector(state =>state.currentUser)
+  const URL = useSelector(state =>state.URL)
   const medicalInfo = useSelector(state => state.medical_info)
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -29,8 +30,9 @@ export default function Dashboard() {
   const [tests , setTests] = useState([])
   const [medicationsCount , setMedicationsCount] = useState(null)
   const [medications , setMedications] = useState([])
+  console.log(URL)
   const getPatients = async() => {
-    const res =  (await axios.get('http://localhost:8000/api/patients/my',{headers: {Authorization: localStorage.getItem('access-token')}})).data
+    const res =  (await axios.get(`${URL}/api/patients/my`,{headers: {Authorization: localStorage.getItem('access-token')}})).data
     console.log(res)
     if(res.status === 200){
       setPatientsCount(res.patients.length)
@@ -44,10 +46,10 @@ export default function Dashboard() {
    const getAppointments = async() => {
     let url = ''
     if(user&& user.type == 'patient'){
-      url = 'http://localhost:8000/api/appointments'
+      url = `${URL}/api/appointments`
 
     }else {
-      url = 'http://localhost:8000/api/appointments/my'
+      url = `${URL}/api/appointments/my`
     }
     const res =  (await axios.get(url,{headers: {Authorization: localStorage.getItem('access-token')}})).data
     console.log(res)
@@ -64,10 +66,10 @@ export default function Dashboard() {
    const getMedications = async() => {
     let url = ''
     if(user && user.type =='patient'){
-      url = 'http://localhost:8000/api/medications'
+      url = `${URL}/api/medications`
 
     }else {
-      url = 'http://localhost:8000/api/medications/my'
+      url = `${URL}/api/medications/my`
     }
     
     const res =  (await axios.get(url,{headers: {Authorization: localStorage.getItem('access-token')}})).data
@@ -83,10 +85,10 @@ export default function Dashboard() {
    const getTests = async() => {
     let url = ''
     if(user && user.type == 'patient'){
-      url = 'http://localhost:8000/api/tests'
+      url = `${URL}/api/tests`
 
     }else {
-      url = 'http://localhost:8000/api/tests/my'
+      url = `${URL}/api/tests/my`
     }
     
     const res =  (await axios.get(url,{headers: {Authorization: localStorage.getItem('access-token')}})).data
@@ -100,17 +102,6 @@ export default function Dashboard() {
    }
   }
    
-  // const getUser = async() => {
-  //   const res =  (await axios.get('http://localhost:8000/api/user',{headers: {Authorization: localStorage.getItem('access-token')}})).data
-  //   if(res.status === 200){
-
-  //     dispatch(actions.updateUser(res.user))
-   
-  //    } 
-  //    if(res.status == 403){
-  //      navigate('/', {state: {message: 'You are not authenticated. Please login'}})
-  //    } 
-  //   }  
  
    useEffect(() => {
     //  getUser()
@@ -130,7 +121,7 @@ export default function Dashboard() {
     },[user])
     
     if(user){
-     if( user.type === 'patient'){
+     if( user.type !== 'patient'){
     return (
       
     <div className='flex flex-row  font-[Outfit] bg-[#fafbfb] justify-between h-full'>
@@ -138,7 +129,7 @@ export default function Dashboard() {
     <div className="dashboard ml-[15%] flex flex-row gap-[1em] justify-between">
       <div className='flex flex-col gap-[1em]'>
       <div className="info shadow-md  flex flex-col bg-white ml-[1em] p-[2em]  gap-[1.5em]">
-      <img src={"http://localhost:8000/api"+user.profile_img} alt={user.full_name} className='h-[5em] w-[5em] object-cover m-auto rounded-full'/>
+      <img src={`${URL}/api/`+user.profile_img} alt={user.full_name} className='h-[5em] w-[5em] object-cover m-auto rounded-full'/>
           <p className="font-bold capitalize m-auto">{user? user.full_name:''}</p>
       
       <div className=" w-[20em] flex flex-wrap gap-[1em]">

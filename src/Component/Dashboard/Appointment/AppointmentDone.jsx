@@ -33,7 +33,7 @@ export default function AppointmentDone({title, appointments}) {
       appointments.map((appointment) => {
         return    ( <div className="today_appointment grid grid-cols-6">
         <div className='inline-flex'>
-          <img src={'http://localhost:8000/api'+appointment.appointed_to.profile_img} alt='patient_image' className='h-[2em] w-[2em] rounded-full object-cover'/>
+          <img src={`${URL}/api`+appointment.appointed_to.profile_img} alt='patient_image' className='h-[2em] w-[2em] rounded-full object-cover'/>
           <p className="font-bold ml-[.25em] text-sm">{appointment.appointed_to.full_name}</p>
         </div>
         <p className="font-bold text-sm">{appointment.title}

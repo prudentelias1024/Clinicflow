@@ -7,9 +7,11 @@ import { actions } from '../../store'
 
 export default function Settings() {
  const user = useSelector(state => state.currentUser)
+  const URL = useSelector(state => state.URL)
  const dispatch = useDispatch()
+
  const getUser = async() => {
-  const res =  (await axios.get('http://localhost:8000/api/user',{headers: {Authorization: localStorage.getItem('access-token')}})).data
+  const res =  (await axios.get(`${URL}/api/user`,{headers: {Authorization: localStorage.getItem('access-token')}})).data
   console.log(res)
   if(res.status === 200){
     dispatch(actions.updateUser(res.user))

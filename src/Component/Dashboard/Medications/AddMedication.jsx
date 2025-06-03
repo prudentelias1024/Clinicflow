@@ -2,8 +2,10 @@ import axios from 'axios'
 import React, {useRef, useState} from 'react'
 import { useLocation , useNavigate} from 'react-router-dom'
 import SideNav from '../SideNav'
+import { useSelector } from 'react-redux'
 
 export default function AddMedication() {
+  const URL = useSelector(state => state.URL)
   const location = useLocation()
   const nameRef = useRef()
   const reasonRef = useRef()
@@ -33,7 +35,7 @@ export default function AddMedication() {
     formData.append('manufacturer',manufacturer)
     formData.append('specialist_id',location.state.docId)
     formData.append('patient_id',location.state.patientId)
-    const res = await (await axios.post('http://localhost:8000/api/medications', formData, {headers: { Authorization: localStorage.getItem('access-token')}})).data
+    const res = await (await axios.post(`${URL}/api/medications`, formData, {headers: { Authorization: localStorage.getItem('access-token')}})).data
     if(res.status === 200){
       setAddedSuccessfully(true)
       setTimeout(() => {

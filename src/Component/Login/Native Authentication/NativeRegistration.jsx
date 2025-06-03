@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react'
 import Lasulogo from '../../../lasu.jpeg'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { useSelector } from 'react-redux'
 
 
 export default function NativeRegistration() {
@@ -16,7 +17,7 @@ export default function NativeRegistration() {
     const [passwordError,setPasswordError] = useState(false)
     const [imageData,setImageData] = useState(false)
     const navigate = useNavigate()
-    
+    const URL = useSelector(state => state.URL)
     const chooseImage = (event) => {
         setImageData(event.target.files[0])
     }
@@ -45,7 +46,7 @@ export default function NativeRegistration() {
         formData.append('profile_img', imageData, imageData.name)
 
         if (!passwordError) {
-         let res = await((await axios.post('http://localhost:8000/api/native/register',formData,
+         let res = await((await axios.post(`${URL}/api/native/register`,formData,
          {headers: {'Content-Type': "multipart/form-data"}}
          ))).data
          console.log(res)

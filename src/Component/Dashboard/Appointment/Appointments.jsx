@@ -16,12 +16,13 @@ export default function Appointments() {
     const [doneAppointmentCount , setDoneAppointmentsCount] = useState(null)
 
     const user = useSelector(state => state.currentUser)
+      const URL = useSelector(state => state.URL)
     const getDoneAppointments = async() => {
       let url = ''
       if(user && user.type == 'doctor'){
-        url = 'http://localhost:8000/api/appointments/done/my'
+        url = `${URL}/api/appointments/done/my`
        }else{
-         url = 'http://localhost:8000/api/appointments/done'
+         url = `${URL}/api/appointments/done`
        }
       
       const res =  (await axios.get(url,{headers: {Authorization: localStorage.getItem('access-token')}})).data
@@ -38,9 +39,9 @@ export default function Appointments() {
     const getUpcomingAppointments = async() => {
       let url = ''
       if(user&& user.type == 'doctor'){
-        url = 'http://localhost:8000/api/appointments/upcoming/my'
+        url = `${URL}/api/appointments/upcoming/my`
       } else{
-        url = 'http://localhost:8000/api/appointments/upcoming'
+        url = `${URL}/api/appointments/upcoming`
      
       }
       const res =  (await axios.get(url,{headers: {Authorization: localStorage.getItem('access-token')}})).data

@@ -2,11 +2,13 @@ import axios from 'axios'
 import React, { useRef } from 'react'
 import { FaFileDownload } from 'react-icons/fa'
 import moment from 'moment'
+import { useSelector } from 'react-redux'
 export default function TestResults({tests}) {
+  const URL = useSelector(state => state.URL)
   const fileRef = useRef()
   const downloadTestFile = async() => {
     let file_name = fileRef.current.getAttribute('value')
-    const res = await (await axios.get(`http://localhost:8000/api/download${file_name}`, { responseType: 'blob',headers: {Authorization: localStorage.getItem('access-token')}}))
+    const res = await (await axios.get(`${URL}/api/download/${file_name}`, { responseType: 'blob',headers: {Authorization: localStorage.getItem('access-token')}}))
     const blob = new Blob([res.data],{type:res.headers['content-type']})
     const url = window.URL.createObjectURL(blob)
     const link = document.createElement('a')

@@ -2,12 +2,14 @@ import React , {useRef, useState, useEffect} from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import SideNav from '../SideNav'
+import { useSelector } from 'react-redux'
 
 export default function EditMedicalInfo() {  
   const location = useLocation()
+    const URL = useSelector(state => state.URL)
   const [medicalInfo, setMedicalInfo] = useState(null)
   const getMedicalInfo = async() => {
-    const res = await(await axios.get(`http://localhost:8000/api/patient/medicalInfo/${location.state.patientId}`, {headers: {Authorization: localStorage.getItem('access-token')}})).data
+    const res = await(await axios.get(`${URL}/api/patient/medicalInfo/${location.state.patientId}`, {headers: {Authorization: localStorage.getItem('access-token')}})).data
     console.log(res)
     if(res.status == 200){
 
@@ -89,7 +91,7 @@ export default function EditMedicalInfo() {
        formData.append('specialist_id',location.state.docId)
        formData.append('patient_id',location.state.patientId)
        if(alreadyAdded){
-       const res = await (await axios.put('http://localhost:8000/api/medicalInfo', formData, {headers: { Authorization: localStorage.getItem('access-token')}})).data
+       const res = await (await axios.put(`${URL}/api/medicalInfo`, formData, {headers: { Authorization: localStorage.getItem('access-token')}})).data
        if(res.status === 200){
          setAddedSuccessfully(true)
          setTimeout(() => {
@@ -100,7 +102,7 @@ export default function EditMedicalInfo() {
        }
      }
      else {
-      const res = await (await axios.post('http://localhost:8000/api/medicalInfo', formData, {headers: { Authorization: localStorage.getItem('access-token')}})).data
+      const res = await (await axios.post(`${URL}/api/medicalInfo`, formData, {headers: { Authorization: localStorage.getItem('access-token')}})).data
        if(res.status === 200){
          setAddedSuccessfully(true)
          setTimeout(() => {

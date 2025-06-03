@@ -9,11 +9,12 @@ import axios from 'axios'
 
 export default function Patients() {
   const [myPatients,setMyPatients] = useState([])
-  const [patients,setPatients] = useState([])
+  const [patients,setPatients] = useState([])  
+  const URL = useSelector(state => state.URL)
 
   
   const getMyPatients = async() => {
-    const res =  await(await axios.get('http://localhost:8000/api/patients/my',{headers: {Authorization: localStorage.getItem('access-token')}})).data
+    const res =  await(await axios.get(`${URL}/api/patients/my`,{headers: {Authorization: localStorage.getItem('access-token')}})).data
     console.log(res)
     if(res.status === 200){
       console.log(res.patients)
@@ -21,7 +22,7 @@ export default function Patients() {
       } 
   }
   const getAllPatientNotAssigned = async() => {
-    const res =  await(await axios.get('http://localhost:8000/api/patients/all',{headers: {Authorization: localStorage.getItem('access-token')}})).data
+    const res =  await(await axios.get(`${URL}/api/patients/all`,{headers: {Authorization: localStorage.getItem('access-token')}})).data
     console.log(res)
     if(res.status === 200){
       console.log(res.patients)

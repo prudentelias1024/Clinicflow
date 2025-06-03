@@ -3,7 +3,9 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import SideNav from '../SideNav'
 import { FaFileUpload } from 'react-icons/fa'
+import { useSelector } from 'react-redux'
 export default function AddTests() {
+  const URL = useSelector(state => state.URL)
   const location = useLocation()
   const typeRef = useRef()
   const labNoteRef = useRef()
@@ -35,7 +37,7 @@ export default function AddTests() {
     formData.append('patient_id',location.state.patientId)
     formData.append('file', fileAttached, fileAttached.name)
 
-    const res = await (await axios.post('http://localhost:8000/api/tests', formData, {headers: { Authorization: localStorage.getItem('access-token')}})).data
+    const res = await (await axios.post(`${URL}/api/tests`, formData, {headers: { Authorization: localStorage.getItem('access-token')}})).data
     if(res.status === 200){
       setAddedSuccessfully(true)
       setTimeout(() => {

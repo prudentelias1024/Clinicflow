@@ -3,6 +3,7 @@ import React, {useState,useRef} from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import SideNav from '../SideNav'
 import { useEffect } from 'react'
+import { useSelector } from 'react-redux'
 
 
 export default function AddAppointment() {
@@ -12,6 +13,7 @@ export default function AddAppointment() {
     }
  ,[] )
     const location = useLocation()
+    const URL = useSelector(state => state.URL)
     const titleRef = useRef()
     const descriptionRef = useRef()
     const appointmentStartTimeRef = useRef()
@@ -29,7 +31,7 @@ export default function AddAppointment() {
       formData.append('start_time',start_time)
       formData.append('end_time',end_time)
       formData.append('specialist_id',location.state.docId)
-      const res = await (await axios.post('http://localhost:8000/api/appointments', formData, {headers: { Authorization: localStorage.getItem('access-token')}})).data
+      const res = await (await axios.post(`${URL}/api/appointments`, formData, {headers: { Authorization: localStorage.getItem('access-token')}})).data
       if(res.status === 200){
         setAddedSuccessfully(true)
         setTimeout(() => {

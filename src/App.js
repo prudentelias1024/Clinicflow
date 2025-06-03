@@ -31,7 +31,7 @@ import VerifyFingerprint from './Component/Login/Fingerprint/VerifyFingerprint.j
 function App() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-
+  let url;
   const getUser = async() => {
     const res =  (await axios.get('http://localhost:8000/api/user',{headers: {Authorization: localStorage.getItem('access-token')}})).data
     console.log(res)
@@ -47,7 +47,15 @@ function App() {
    
   }
   const getMedicalInfo = async() => {
-    const res = await(await axios.get('http://localhost:8000/api/medicalInfo', {headers: {Authorization: localStorage.getItem('access-token')}})).data
+    if(process.env.NODE_ENV == 'production'){
+      url = "https://hrs-3fa.onrender.com"
+      
+      dispatch(actions.updateURL(url))
+    }else{
+      url = "http://localhost:8000"
+      dispatch(actions.updateURL(url))
+    }
+    const res = await(await axios.get(`${url}/api/medicalInfo`, {headers: {Authorization: localStorage.getItem('access-token')}})).data
     console.log(res)
     dispatch(actions.updateMedicalInfo(res.medical_info))
   }

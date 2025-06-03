@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux'
 export default function Doctors() {
   const docIdRef = useRef()
   const user = useSelector(state => state.currentUser)
+  const URL = useSelector(state => state.URL)
   const [doctors,setDoctors] = useState(null)
   
   const navigate = useNavigate()
@@ -22,7 +23,7 @@ export default function Doctors() {
   }
 
   const getDoctors = async() => {
-    const res = await (await axios.get('http://localhost:8000/api/doctors/all', {headers: {Authorization: localStorage.getItem('access-token')}})).data
+    const res = await (await axios.get(`${URL}/api/doctors/all`, {headers: {Authorization: localStorage.getItem('access-token')}})).data
     if(res.status === 200){
       console.log(res)
       setDoctors(res.doctors)
@@ -57,7 +58,7 @@ export default function Doctors() {
         doctors.map((doctor) => {
           return   <div className="test_done border rounded-md w-[98%]   bg-white grid grid-cols-4 p-[.5em]">
           <div className='inline-flex'>
-            <img src={'http://localhost:8000/api'+doctor.user_id.profile_img} alt='patient_image' className='h-[1.5em] w-[1.5em] rounded-full'/>
+            <img src={`${URL}/api`+doctor.user_id.profile_img} alt='patient_image' className='h-[1.5em] w-[1.5em] rounded-full'/>
             <p className="font-semibold ml-3 text-sm">{doctor.user_id.full_name}</p>
           </div>
           <p className="font-semibold text-sm">{doctor.department}</p>

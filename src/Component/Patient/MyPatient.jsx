@@ -6,8 +6,9 @@ import axios from 'axios';
 export default function MyPatient({user,onAdd, onRemove}) {
   const currentUser =  useSelector(state => state.currentUser)
   const navigate = useNavigate()
+  const URL = useSelector(state => state.URL)
   const removePatient = async() => {
-    await (await axios.put('http://localhost:8000/api/patients/my/remove',{userId: user.three_fa_id } ,{headers: {Authorization: localStorage.getItem('access-token')}})).data
+    await (await axios.put(`${URL}/api/patients/my/remove`,{userId: user.three_fa_id } ,{headers: {Authorization: localStorage.getItem('access-token')}})).data
     onAdd()
     onRemove()
 

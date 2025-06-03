@@ -5,16 +5,17 @@ import { useSelector } from 'react-redux'
 
 export default function Medications() {
     const user = useSelector(state => state.currentUser)
+    const URL = useSelector(state => state.URL)
     const fileRef = useRef()
     const [medications, setMedications] = useState([])
       
    const getMedications = async() => {
     let url = ''
-    if(user && user.type =='patient'){
-      url = 'http://localhost:8000/api/medications'
+    if(user && user.type == 'patient'){
+      url = `${URL}/api/medications`
 
     }else {
-      url = 'http://localhost:8000/api/medications/my'
+      url = `${URL}/api/medications/my`
     }
     
     const res =  (await axios.get(url,{headers: {Authorization: localStorage.getItem('access-token')}})).data

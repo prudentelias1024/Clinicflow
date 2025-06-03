@@ -4,7 +4,7 @@ import Lasulogo from '../../../lasu.jpeg'
 import { Link,  useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import {  actions } from "../../../store";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 export default function NativeLogin() {
   const emailRef = useRef()
   const passwordRef = useRef()
@@ -12,7 +12,7 @@ export default function NativeLogin() {
   const [passwordError, setPasswordError] = useState()
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  
+  const URL = useSelector(state => state.URL)
   const login = async() => {
     setEmailError('')
     setPasswordError('')
@@ -23,7 +23,7 @@ export default function NativeLogin() {
     }
    
     console.log(formData);
-    let res = (await axios.post('http://localhost:8000/api/native/login',formData)).data
+    let res = (await axios.post(`${URL}/api/native/login`,formData)).data
     console.log(res)
     if (res.emailError) {
       setEmailError(res.emailError)
