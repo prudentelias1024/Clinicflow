@@ -1,5 +1,5 @@
 import React from 'react'
-import patientImage from '../../../lasu.jpeg'
+import patientImage from '../../../logo.png'
 
 export default function UpcomingAppointment({appointment}) {
   return (

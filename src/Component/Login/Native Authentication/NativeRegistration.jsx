@@ -1,11 +1,14 @@
 import React, { useRef, useState } from 'react'
-import Lasulogo from '../../../lasu.jpeg'
+import Lasulogo from '../../../logo.png'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
-
+import { UserRoundPlus, CircleAlert, ImagePlus, CheckCircle2 } from "lucide-react";
+import { AuthShell, fieldInput, fieldLabel, primaryButton } from "../../Authshell";
 
 export default function NativeRegistration() {
+    
+    
     const nameRef = useRef()
     const emailRef = useRef()
     const dobRef = useRef()
@@ -16,6 +19,10 @@ export default function NativeRegistration() {
     const genderRef = useRef()
     const [passwordError,setPasswordError] = useState(false)
     const [imageData,setImageData] = useState(false)
+    const [loading, setLoading] = useState(false);
+  
+  const [imageName, setImageName] = useState(null);
+  const [error, setError] = useState(null);
     const navigate = useNavigate()
     const URL = useSelector(state => state.URL)
     const chooseImage = (event) => {
@@ -58,85 +65,106 @@ export default function NativeRegistration() {
       
     }
   return (
-    <>
-    
-    <form   className="w-full lg:w-1/3  lg:border lg:rounded-lg m-auto mt-[4em] px-6 lg:px-12 py-6 flex flex-col gap-[1em]">
-        <img src={Lasulogo} className='h-[6em] w-[6em] object-cover m-auto' alt="lasu_logo" />
-        <p className="font-[Outfit] text-2xl font-semibold text-center mb-[1em] ">LASU Medical Records</p>
-       {
-        passwordError ? 
-    
-        <p className="font-[Outfit] text-xl text-red-500 font-semibold text-center mb-[1em] ">Password doesn't match</p>
-        : ''
-}
-<div>
-             <label className="font-[Poppins] text-[1em] font-bold" for="username">Image </label> 
-             <input onChange={(event) => {chooseImage(event)}}  className="w-full h-12 border font-[Poppins] p-4 rounded-sm font-bold" accept='image/jpeg,image/png,image/jpg'  type="file" name="profile_img" />
-             
-         </div>
-    
+  <AuthShell
+      badge="New Patient Registration"
+      title="Create your account"LASU
+      subtitle="One account for every consultation, prescription, and test result at Clinicflow."
+      wide
+      footer={
+        <>
+          Already registered?{" "}
+          <Link to="/nativeLogin" className="font-bold text-primary underline-offset-4 hover:underline">
+            Sign in instead
+          </Link>
+        </>
+      }
+    >
+      <form onSubmit={register} className="flex flex-col gap-5" noValidate>
+        {error && (
+          <p className="flex items-center gap-2 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm font-semibold text-destructive">
+            <CircleAlert className="size-4 shrink-0" />
+            {error}
+          </p>
+        )}
 
+        <div>
+          <span className={fieldLabel}>Profile photo</span>
+          <label
+            htmlFor="profile_img"
+            className="flex cursor-pointer items-center gap-3 rounded-xl border border-dashed border-input bg-background px-4 py-4 transition-colors hover:border-primary/50"
+          >
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-secondary text-primary">
+              {imageName ? <CheckCircle2 className="size-5" /> : <ImagePlus className="size-5" />}
+            </span>
+            <span className="min-w-0">
+              <span className="block truncate text-sm font-semibold text-foreground">
+                {imageName ?? "Upload a clear photo of yourself"}
+              </span>
+              <span className="block text-xs text-muted-foreground">JPG or PNG, used on your patient card</span>
+            </span>
+          </label>
+          <input
+            id="profile_img"
+            type="file"
+            name="profile_img"
+            accept="image/jpeg,image/png,image/jpg"
+            className="sr-only"
+           />
+        </div>
 
-     <div className="username w-full">
-         <label className="font-[Outfit] text-[1em] font-bold" for="username">Full Name</label> 
-         <input ref={nameRef} className="w-full  h-8 border font-[Outfit] lg:p-4 rounded-sm font-bold"   type="text" name="username" />
-         
-     </div>
-   
-       
-     <div className="email">
-         <label className="font-[Outfit] text-[1em] font-bold" for="username">Email</label> 
-         <input ref={emailRef} className="w-full h-8 border font-[Outfit] p-4 rounded-sm font-bold"   type="text" name="email" />
-         
-     </div>
-   
-     <div className="phone_no">
-         <label className="font-[Outfit] text-[1em] font-bold" for="username">Phone Number</label> 
-         <input ref={contactRef} className="w-full h-8 border font-[Outfit] p-4 rounded-sm font-bold"   type="text" name="phone_no" />
-     </div>
+        <div className="grid gap-5 sm:grid-cols-2">
+          <div>
+            <label htmlFor="full_name" className={fieldLabel}>Full name</label>
+            <input id="full_name" type="text" name="username" autoComplete="name" ref={nameRef} placeholder="Adaeze Okafor" className={fieldInput}  />
+          </div>
+          <div>
+            <label htmlFor="reg_email" className={fieldLabel}>Email</label>
+            <input id="reg_email" type="email" name="email" autoComplete="email" ref={emailRef} placeholder="you@lasu.edu.ng" className={fieldInput}   />
+          </div>
+          <div>
+            <label htmlFor="phone_no" className={fieldLabel}>Phone number</label>
+            <input id="phone_no" type="tel" name="phone_no" autoComplete="tel" ref={contactRef} placeholder="0803 000 0000" className={fieldInput}  />
+          </div>
+          
+          <div>
+            <label htmlFor="dob" className={fieldLabel}>Date of birth</label>
+            <input id="dob" type="date" name="dob" autoComplete="bday" className={fieldInput}   />
+          </div>
+          <div>
+            <label htmlFor="gender" className={fieldLabel}>Gender</label>
+            <select id="gender" name="gender" className={fieldInput}  >
+              <option value="" disabled>Select gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div>
+            <label htmlFor="address" className={fieldLabel}>Home address</label>
+            <input id="address" type="text" name="address" autoComplete="street-address" ref={addressRef} placeholder="Hall / street, Lagos" className={fieldInput}   />
+          </div>
+          <div>
+            <label htmlFor="reg_password" className={fieldLabel}>Password</label>
+            <input id="reg_password" type="password" name="password" autoComplete="new-password" ref={passwordRef} placeholder="At least 6 characters" className={fieldInput}   />
+          </div>
+          <div>
+            <label htmlFor="confirm_password" className={fieldLabel}>Confirm password</label>
+            <input id="confirm_password" type="password" name="password2" autoComplete="new-password" ref={confPwdRef} placeholder="Repeat your password" className={fieldInput}  
+             />
+          </div>
+        </div>
 
-     <div className="dob">
-         <label className="font-[Outfit] text-[1em] font-bold" for="username">Date Of Birth</label> 
-         <input ref={dobRef} className="w-full h-8 border font-[Outfit] p-4 rounded-sm font-bold"   type="date" name="dob" />
-     </div>
-
-     <div className="gender">
-         <label className="font-[Outfit] text-[1em] font-bold" for="gender">Gender</label> 
-         <select 
-         className="w-full h-8 border font-[Outfit]  rounded-sm font-bold"
-         ref={genderRef} name="gender">
-            <option name="" >..</option>
-            <option value="male"  >Male</option>
-            <option value="female"  >Female</option>
-         </select>
-     </div>
-   
-   
-     <div className="address">
-         <label className="font-[Outfit] text-[1em] font-bold" for="username">Home Address</label> 
-         <input ref={addressRef} className="w-full h-8 border font-[Outfit] p-4 rounded-sm font-bold"   type="text" name="home_add" />
-     </div>
-   
-
-   
-     <div className="password">
-         <label className="font-[Outfit] text-[1em] font-bold" for="password">Password</label> 
-         <input ref={passwordRef} className="w-full h-8 border font-[Outfit] p-4 rounded-sm font-bold" type="password" name="password"   /> 
-    
-    </div>
-
-     <div className="confirm_pass">
-         <label className="font-[Outfit] text-[1em] font-bold" for="password_conf">Confirm Password</label> 
-         <input ref={confPwdRef} className="w-full h-8 border font-[Outfit] p-4 rounded-sm font-bold" type="password" name="password_conf"   /> 
-    
-    </div>
-     <button onClick={register} className="bg-orange-500 text-white font-[Outfit] p-2 rounded-lg" name="login" type="button">Register</button>
-  
-  <Link className='font-[Sen] m-auto text-blue-500' to='/NativeLogin'>Login Here?</Link>
-  </form>
-
-
-    
-    </>
+        <button type="submit" className={primaryButton} disabled={loading}>
+          {loading ? (
+            "Creating your account…"
+          ) : (
+            <>
+              <UserRoundPlus className="size-4" />
+              Create account
+            </>
+          )}
+        </button>
+      </form>
+    </AuthShell>
 )
 }

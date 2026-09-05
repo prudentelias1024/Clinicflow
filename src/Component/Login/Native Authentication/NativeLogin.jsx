@@ -1,10 +1,13 @@
 import React, { useRef, useState } from 'react'
 
-import Lasulogo from '../../../lasu.jpeg'
+import clinicflow from '../../../logo.png'
 import { Link,  useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import {  actions } from "../../../store";
 import { useDispatch, useSelector } from 'react-redux';
+import { KeyRound, LogIn, CircleAlert } from "lucide-react";
+import { AuthShell, fieldInput, fieldLabel, primaryButton } from "../../Authshell";
+
 export default function NativeLogin() {
   const emailRef = useRef()
   const passwordRef = useRef()
@@ -13,6 +16,12 @@ export default function NativeLogin() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const URL = useSelector(state => state.URL)
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+
   const login = async() => {
     setEmailError('')
     setPasswordError('')
@@ -39,42 +48,76 @@ export default function NativeLogin() {
     }
   }
   return (
-    <>
-    <form   class="w-full lg:w-1/3  lg:border lg:rounded-lg m-auto mt-[4em] px-6 lg:px-12 py-6 flex flex-col gap-[2em]">
-        <img src={Lasulogo} className='h-[6em] w-[6em] object-cover m-auto' alt="lasu_logo" />
-        <p className="font-[poppins] text-2xl font-semibold text-center ">LASU Medical Records</p>
-        {
-        passwordError ? 
-    
-        <p className="font-[poppins] text-xl text-red-500 font-semibold text-center mb-[1em] ">{passwordError}</p>
-        : ''
-}
-{
-        emailError ? 
-    
-        <p className="font-[poppins] text-xl text-red-500 font-semibold text-center mb-[1em] ">{emailError}</p>
-        : ''
-}
-       
-     <div class="email">
-         <label class="font-[poppins] text-[1em] font-bold" for="username">Email</label> 
-         <input ref={emailRef} class="w-full h-8 border font-[poppins] p-4 rounded-sm font-bold"   type="text" name="email" />
-         
-     </div>
-   
-     <div class="password">
-         <label class="font-[poppins] text-[1em] font-bold" for="password">Password</label> 
-         <input ref={passwordRef} class="w-full h-8 border font-[poppins] p-4 rounded-sm font-bold" type="password" name="password"   /> 
-    
-    </div>
-   
-     <button  onClick={login} class="bg-orange-500 text-white font-[poppins] p-2 rounded-lg" name="login" type="button">Login</button>
-  
-  <Link className='font-[Sen] m-auto text-blue-500 text-center' to='/NativeRegistration'>Register Here?</Link>
-  <Link className='font-[Sen] m-auto text-blue-500 text-center' to='/NativeLogin/Doctor'>Login as specialist/doctor Here</Link>
-  </form>
- 
-  </>
+       <AuthShell
+      badge="Factor 03 · Password"
+      title="Welcome back"
+      subtitle="Sign in with your patient credentials to view your consultations, prescriptions, and test results."
+      footer={
+        <>
+          New to Clinicflow?{" "}
+          <Link to="/NativeRegistration" className="font-bold text-primary underline-offset-4 hover:underline">
+            Create your account
+          </Link>
+          <span className="mx-2 text-border">·</span>
+          <Link to="/nativeLogin/doctor" className="font-bold text-primary underline-offset-4 hover:underline">
+            Sign in as a doctor
+          </Link>
+        </>
+      }
+    >
+      <form onSubmit={login} className="flex flex-col gap-5" noValidate>
+        {error && (
+          <p className="flex items-center gap-2 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm font-semibold text-destructive">
+            <CircleAlert className="size-4 shrink-0" />
+            {error}
+          </p>
+        )}
+        <div>
+          <label htmlFor="email" className={fieldLabel}>
+            Email
+          </label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            autoComplete="email"
+            placeholder="you@clinicflow.edu.ng"
+            className={fieldInput}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="password" className={fieldLabel}>
+            Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            autoComplete="current-password"
+            placeholder="Your password"
+            className={fieldInput}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <button type="submit" className={primaryButton} disabled={loading}>
+          {loading ? (
+            "Signing you in…"
+          ) : (
+            <>
+              <LogIn className="size-4" />
+              Sign in
+            </>
+          )}
+        </button>
+        <p className="flex items-center justify-center gap-1.5 text-center text-xs text-muted-foreground">
+          <KeyRound className="size-3.5" />
+          Credentials are encrypted in transit and at rest.
+        </p>
+      </form>
+    </AuthShell>
 
     )
 }

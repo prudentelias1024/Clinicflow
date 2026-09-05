@@ -2,14 +2,14 @@ import React from 'react'
 import {IoIosFingerPrint} from 'react-icons/io';
 import {BiFace} from 'react-icons/bi';
 import {MdOutlinePassword} from 'react-icons/md';
-import Lasulogo from '../lasu.jpeg'
+import logo from '../logo.png'
 import { Link, useLocation } from 'react-router-dom';
 export default function Auth() {
   const params = useLocation()
   return (  
         <>
         <div className='flex flex-col gap-[1em] text-center mt-[4em] lg:p-[5em] m-auto '>
-        <img src={Lasulogo} className='h-[6em] w-[6em] object-cover m-auto' alt="lasu_logo" />
+        <img src={logo} className='h-[7em] w-[10em] object-cover m-auto' alt="lasu_logo" />
             {
           params.state?
           <p className="font-[Outfit] text-base m-[1em] text-red-500 font-semibold text-center mb-[1em] ">{params.state.message}</p>

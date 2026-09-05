@@ -1,16 +1,22 @@
 import React, { useRef, useState } from 'react'
-
-import Lasulogo from '../../../lasu.jpeg'
+import Lasulogo from '../../../logo.png'
 import { Link,  useNavigate } from 'react-router-dom'
+import { Stethoscope, LogIn, CircleAlert } from "lucide-react";
 import axios from 'axios'
 import {  actions } from "../../../store";
 import { useDispatch, useSelector } from 'react-redux';
+import { AuthShell, fieldLabel, fieldInput, primaryButton } from '../../Authshell';
 export default function NativeLoginDoctor() {
   const emailRef = useRef()
   const passwordRef = useRef()
   const [emailError, setEmailError] = useState()
   const [passwordError, setPasswordError] = useState()
   const navigate = useNavigate()
+  const [error, setError] = useState()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+   const [loading, setLoading] = useState(false);
+  
   const dispatch = useDispatch()
   const URL = useSelector(state => state.URL)
   const login = async() => {
@@ -27,8 +33,11 @@ export default function NativeLoginDoctor() {
     console.log(res)
     if (res.emailError) {
       setEmailError(res.emailError)
+      setError(true)
     } else if(res.passwordError){
        setPasswordError(res.passwordError)
+       setError(true)
+   
     } else {
       if(res.access_token){
       localStorage.setItem('access-token',res.access_token)
@@ -39,45 +48,72 @@ export default function NativeLoginDoctor() {
     }
   }
   return (
-    <>
-    <form   class="w-full lg:w-1/3  lg:border lg:rounded-lg m-auto mt-[4em] px-6 lg:px-12 py-6 flex flex-col gap-[2em]">
-        <img src={Lasulogo} className='h-[6em] w-[6em] object-cover m-auto' alt="lasu_logo" />
-        <p className="font-[Outfit] text-2xl font-semibold text-center ">LASU Medical Records</p>
-        {
-        passwordError ? 
-    
-        <p className="font-[Outfit] text-xl text-red-500 font-semibold text-center mb-[1em] ">{passwordError}</p>
-        : ''
-}
-{
-        emailError ? 
-    
-        <p className="font-[Outfit] text-xl text-red-500 font-semibold text-center mb-[1em] ">{emailError}</p>
-        : ''
-}
-       
-     <div class="email">
-         <label class="font-[Outfit] text-[1em] font-bold" for="username">Email</label> 
-         <input ref={emailRef} class="w-full h-8 border font-[Outfit] p-4 rounded-sm font-bold"   type="text" name="email" />
-         
-     </div>
-   
-     <div class="password">
-         <label class="font-[Outfit] text-[1em] font-bold" for="password">Password</label> 
-         <input ref={passwordRef} class="w-full h-8 border font-[Outfit] p-4 rounded-sm font-bold" type="password" name="password"   /> 
-    
-    </div>
-   
-     <button  onClick={login} class="bg-orange-500 text-white font-[Outfit] p-2 rounded-lg" name="login" type="button">Login</button>
   
-  <Link className='font-[Sen] m-auto text-blue-500 text-center' to='/NativeRegistration'>Register Here?</Link>
-
-    <Link className='font-[Sen] m-auto text-blue-500 text-center' to='/nativeLogin'>Login as a patient</Link>
-
-    </form>
- 
- 
-  </>
-
-    )
-}
+    <AuthShell
+      badge="Staff Access · Doctors"
+      title="Doctor & specialist sign in"
+      subtitle="Access your patients' charts, appointments, and test results with your Medical Centre staff credentials."
+      footer={
+        <>
+          Not a doctor?{" "}
+          <Link to="/nativeLogin" className="font-bold text-primary underline-offset-4 hover:underline">
+            Sign in as a patient
+          </Link>
+        </>
+      }
+    >
+      <form onSubmit={login} className="flex flex-col gap-5" noValidate>
+        {error && (
+          <p className="flex items-center gap-2 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm font-semibold text-destructive">
+            <CircleAlert className="size-4 shrink-0" />
+            {error}
+          </p>
+        )}
+        <div>
+          <label htmlFor="staff-email" className={fieldLabel}>
+            Staff Email
+          </label>
+          <input
+            id="staff-email"
+            type="email"
+            name="email"
+            autoComplete="email"
+            placeholder="doctor@clinicflow.edu.ng"
+            className={fieldInput}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="staff-password" className={fieldLabel}>
+            Password
+          </label>
+          <input
+            id="staff-password"
+            type="password"
+            name="password"
+            autoComplete="current-password"
+            placeholder="Your password"
+            className={fieldInput}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <button type="submit" className={primaryButton} disabled={loading}>
+          {loading ? (
+            "Verifying credentials…"
+          ) : (
+            <>
+              <LogIn className="size-4" />
+              Sign in to staff portal
+            </>
+          )}
+        </button>
+        <p className="flex items-center justify-center gap-1.5 text-center text-xs text-muted-foreground">
+          <Stethoscope className="size-3.5" />
+          Staff accounts are provisioned by the Medical Centre admin.
+        </p>
+      </form>
+    </AuthShell>
+  ) 
+  }

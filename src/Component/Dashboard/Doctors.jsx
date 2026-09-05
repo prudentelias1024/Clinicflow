@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef}from 'react'
 import SideNav from './SideNav'
 import ProfileNavbar from './ProfileNavbar'
 
-import patientImage from '../../lasu.jpeg'
+import patientImage from '../../logo.png'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
