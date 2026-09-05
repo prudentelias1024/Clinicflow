@@ -78,7 +78,7 @@ export default function NativeLoginDoctor() {
             type="email"
             name="email"
             autoComplete="email"
-            placeholder="doctor@clinicflow.edu.ng"
+            placeholder="doctor@gmail.com"
             className={fieldInput}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
