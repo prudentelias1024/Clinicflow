@@ -62,37 +62,6 @@ export default function Appointments() {
       }
     },[user])
   return (
-      <div className='flex flex-row justify-between h-full bg-[#FAFBFB]'>
-    <SideNav />
-    <div className="dashboard ml-[15%] flex flex-col ">
-      <ProfileNavbar/>
-      {/* { user &&user.type === 'doctor'?
-      <AppointmentIndicator totalAppointment={appointmentCount+doneAppointmentCount} doneAppointment={doneAppointmentCount}
-      upcomingAppointment={appointmentCount}
-      />: ''
-    } */}
-
-      <AppointmentDone title="Upcoming Appointments" appointments={appointments}/>
-   
-  <AppointmentDone title="Done Appointments" appointments={doneAppointments}/
-  > 
-     </div>
-    <div className='flex bg-white border h-fit shadow-md rounded-md mt-[1.5em] flex-col mr-[1em] '>
-    <Calendar  className="ml-[1em] border-none font-[Outfit]"  />
-    <br />
-     <hr />
-
-    {/* {user.type === 'doctor'?
-    <>
-    <p className="font-[Outfit] ml-[2em] mt-[1em]">{appointmentCount} Appointments to go</p>
-    <br />
-    <hr />
-    <div className="appointments mt-[1.5em] p-[.5em] flex flex-col gap-[1em]">
-    </div>
-</> : ''
-} */}
-
-    </div>
-    </div>
+     <></>
   )
 }

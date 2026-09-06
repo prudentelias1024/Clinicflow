@@ -4,6 +4,16 @@ import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import { actions } from '../../store'
+import {
+  CheckCircle2,
+  Fingerprint,
+  LogOut,
+  ScanFace,
+  Settings as SettingsIcon,
+} from "lucide-react";
+import { toast } from "sonner";
+
+import { PageHeader } from "./DashboardShell";
 
 export default function Settings() {
  const user = useSelector(state => state.currentUser)
@@ -21,60 +31,101 @@ export default function Settings() {
     getUser()
     console.log(user);
   }, [])
+  const rows = [
+    {
+      icon: ScanFace,
+      title: "Two-factor authentication",
+      description:
+        "Add face recognition to secure your records and account activity.",
+      enrolled: true,
+      actionLabel: "Enrol face",
+    },
+    {
+      icon: Fingerprint,
+      title: "Three-factor authentication",
+      description:
+        "Add fingerprint security to protect your medical records and activity.",
+      enrolled: true,
+      actionLabel: "Enrol fingerprint",
+    },
+  ];
+
   return (
-    <div className='flex flex-row justify-between h-full '>
-    <SideNav />
-    <div className="dashboard ml-[15%] w-full flex flex-col gap-[2.5em] font-[Outfit] ">
-    <p className="text-xl font-bold p-[2em]">My Settings</p>
-   
-    
-    <div className="appearance flex flex-row justify-between mr-[1.5em]">
-    <div className="flex flex-col">
-    <p className="text-base font-bold pb-[.5em] px-[2em]">Two Factor Authentication</p>
-    <p className="text-sm text-[#929292] font-semibold ml-[2.25em]">Add Face Recognition to secure your records and activity</p>
+     <div className='flex flex-row gap-[10em] font-[Outfit] bg-[#fafbfb] justify-between h-full'>
+        <SideNav />
+       
+    <div className="animate-rise-in ml-[20em] pt-[3em]">
+      <PageHeader
+        icon={SettingsIcon}
+        title="My Settings"
+        description="Security and account options for your Clinicflow profile."
+      />
+
+      <div className="flex max-w-3xl flex-col gap-4">
+        {rows.map(({ icon: Icon, title, description, enrolled, actionLabel }) => (
+          <div
+            key={title}
+            className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-border bg-card p-6"
+          >
+            <div className="flex items-start gap-4">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <Icon className="h-5 w-5" />
+              </span>
+              <div>
+                <h2 className="font-display text-base font-bold text-foreground">
+                  {title}
+                </h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {user.full_name}
+                </p>
+              </div>
+            </div>
+            {enrolled ? (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-600">
+                <CheckCircle2 className="h-3.5 w-3.5" />
+                Enrolled
+              </span>
+            ) : (
+              <button
+                type="button"
+                onClick={() =>
+                  toast.info(
+                    "Biometric enrolment will be available once the Clinicflow backend is connected.",
+                  )
+                }
+                className="rounded-xl bg-primary px-4 py-2 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/90"
+              >
+                {actionLabel}
+              </button>
+            )}
+          </div>
+        ))}
+
+        <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-border bg-card p-6">
+          <div className="flex items-start gap-4">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-destructive/10 text-destructive">
+              <LogOut className="h-5 w-5" />
+            </span>
+            <div>
+              <h2 className="font-display text-base font-bold text-foreground">
+                Log out
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                You'll have to sign in again next time to access your records.
+              </p>
+            </div>
+          </div>
+          <Link
+            to="/"
+            className="rounded-xl bg-destructive px-4 py-2 text-sm font-bold text-destructive-foreground transition-colors hover:bg-destructive/90"
+          >
+            Log out
+          </Link>
+        </div>
+      </div>
     </div>
-    {
-     user !== null && !user.enrolled_face ?
-      <Link to='/faceRecognition/enrol' className='bg-purple-500 w-fit h-fit  p-[.5em] rounded-lg mt-[-1em]  text-white mr-[3em] '>Enrol Face</Link> 
-      :
-      <p className='text-purple-500 w-fit h-fit  p-[.5em] rounded-lg mt-[-1em]   mr-[3em] '>Enrolled</p> 
-      
-    }
-   
-</div>
-
-
-<div className="appearance flex flex-row justify-between mr-[1.5em]">
-    <div className="flex flex-col">
-    <p className="text-base font-bold pb-[.5em] px-[2em]">Three Factor Authentication</p>
-    <p className="text-sm text-[#929292] font-semibold ml-[2em]">Add Fingerprint security to secure your medical records and activity </p>
     </div>
-   
-    {
-     user !== null && !user.enrolled_fingerprint ?
-      <Link to='/fingerprint/enrol' className='bg-purple-500 w-fit h-fit  p-[.5em] rounded-lg mt-[-1em]  text-white mr-[3em] '>Enrol Face</Link> 
-      :
-      <p className='text-purple-500 w-fit h-fit  p-[.5em] rounded-lg mt-[-1em]   mr-[3em] '>Enrolled</p> 
-      
-    }
-   
-</div>
-
-
-
-<div className="appearance flex flex-row justify-between mr-[1.5em]">
-    <div className="flex flex-col">
-    <p className="text-base font-bold pb-[.5em] px-[2em]">Logout</p>
-    <p className="text-sm text-[#929292] font-semibold ml-[2em]">You'll have to login next time to access this application </p>
-    </div>
-   
-    <Link to='/logout' className='bg-purple-500 w-fit h-fit  p-[.5em] rounded-lg mt-[-1em]  text-white mr-[3em] '>Logout</Link> 
-   
-</div>
-
-
-
-   </div>
-  </div>
-  )
+  );
 }
+  
+

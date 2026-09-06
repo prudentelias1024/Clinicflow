@@ -9,7 +9,7 @@ const connectMongooseDB = () => {
         URL = process.env.COMPASS_URI
 
 }
-    mongoose.connect(URL,{
+    mongoose.connect(process.env.MONGO_URI,{
         useUnifiedTopology:true,
         useNewUrlParser: true
     },)
