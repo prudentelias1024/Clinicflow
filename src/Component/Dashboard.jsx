@@ -110,6 +110,7 @@ export default function Dashboard() {
     //     track.stop()
     //   })
     // })
+    console.log(user)
 
     if(user !== null){
 
@@ -118,10 +119,9 @@ export default function Dashboard() {
       getMedications()
       getPatients()
     }
-    },[user])
+    },[user,appointmentCount, testsCount, medicationsCount, patientsCount])
     
-    if(user){
-     if( user.type === 'patient'){
+     if(user && user.type !== 'patient'){
     return (
       
     <div className='flex flex-row  font-[Outfit] bg-[#fafbfb] justify-between h-full'>
@@ -442,7 +442,5 @@ patients != null && patients.length > 0 ?
       </>
   )
 }
-}else {
- return   ''
-}
+
 }

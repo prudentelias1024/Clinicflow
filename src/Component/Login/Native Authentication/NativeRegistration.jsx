@@ -79,7 +79,7 @@ export default function NativeRegistration() {
         </>
       }
     >
-      <form onSubmit={register} className="flex flex-col gap-5" noValidate>
+      <form  className="flex flex-col gap-5" noValidate>
         {error && (
           <p className="flex items-center gap-2 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm font-semibold text-destructive">
             <CircleAlert className="size-4 shrink-0" />
@@ -106,6 +106,7 @@ export default function NativeRegistration() {
           <input
             id="profile_img"
             type="file"
+            onChange={(event) => {chooseImage(event)}}
             name="profile_img"
             accept="image/jpeg,image/png,image/jpg"
             className="sr-only"
@@ -119,7 +120,7 @@ export default function NativeRegistration() {
           </div>
           <div>
             <label htmlFor="reg_email" className={fieldLabel}>Email</label>
-            <input id="reg_email" type="email" name="email" autoComplete="email" ref={emailRef} placeholder="you@lasu.edu.ng" className={fieldInput}   />
+            <input id="reg_email" type="email" name="email" autoComplete="email" ref={emailRef} placeholder="you@gmail.com" className={fieldInput}   />
           </div>
           <div>
             <label htmlFor="phone_no" className={fieldLabel}>Phone number</label>
@@ -128,11 +129,11 @@ export default function NativeRegistration() {
           
           <div>
             <label htmlFor="dob" className={fieldLabel}>Date of birth</label>
-            <input id="dob" type="date" name="dob" autoComplete="bday" className={fieldInput}   />
+            <input id="dob" type="date" name="dob" autoComplete="bday" className={fieldInput} ref={dobRef}   />
           </div>
           <div>
             <label htmlFor="gender" className={fieldLabel}>Gender</label>
-            <select id="gender" name="gender" className={fieldInput}  >
+            <select id="gender" name="gender" ref={genderRef} className={fieldInput}  >
               <option value="" disabled>Select gender</option>
               <option value="male">Male</option>
               <option value="female">Female</option>
@@ -154,7 +155,7 @@ export default function NativeRegistration() {
           </div>
         </div>
 
-        <button type="submit" className={primaryButton} disabled={loading}>
+        <button type="button" onClick={register} className={primaryButton} disabled={loading}>
           {loading ? (
             "Creating your account…"
           ) : (

@@ -38,7 +38,7 @@ export default function NativeLogin() {
       setEmailError(res.emailError)
     } else if(res.passwordError){
        setPasswordError(res.passwordError)
-    } else {
+    } else  {
       if(res.access_token){
       localStorage.setItem('access-token',res.access_token)
       dispatch(actions.updateUser(res.user))
@@ -65,11 +65,18 @@ export default function NativeLogin() {
         </>
       }
     >
-      <form onSubmit={login} className="flex flex-col gap-5" noValidate>
-        {error && (
+      <form  className="flex flex-col gap-5" noValidate>
+        {emailError && (
           <p className="flex items-center gap-2 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm font-semibold text-destructive">
             <CircleAlert className="size-4 shrink-0" />
-            {error}
+            {emailError}
+          </p>
+        )}
+
+        {passwordError && (
+          <p className="flex items-center gap-2 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm font-semibold text-destructive">
+            <CircleAlert className="size-4 shrink-0" />
+            {passwordError}
           </p>
         )}
         <div>
@@ -83,8 +90,7 @@ export default function NativeLogin() {
             autoComplete="email"
             placeholder="you@gmail.com"
             className={fieldInput}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            ref={emailRef}
           />
         </div>
         <div>
@@ -98,11 +104,10 @@ export default function NativeLogin() {
             autoComplete="current-password"
             placeholder="Your password"
             className={fieldInput}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            ref={passwordRef}
           />
         </div>
-        <button type="submit" className={primaryButton} disabled={loading}>
+        <button onClick={login} type="button" className={primaryButton} disabled={loading}>
           {loading ? (
             "Signing you in…"
           ) : (

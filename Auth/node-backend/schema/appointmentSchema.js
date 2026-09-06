@@ -11,4 +11,4 @@ const Appointment = new mongoose.Schema({
     
 })
 
-module.exports = mongoose.model("appointment", Appointment)
+module.exports = mongoose.model("appointment", Appointment) 

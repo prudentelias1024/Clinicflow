@@ -3,7 +3,7 @@ const mongoose  = require("mongoose")
 
 const connectMongooseDB = () => {
     let URL ;
-    if(process.env.NODE_ENV == 'production'){
+    if(process.env.NODE_ENV !== 'production'){
     URL = process.env.MONGO_URI
     } else{
         URL = process.env.COMPASS_URI

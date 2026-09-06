@@ -5,6 +5,7 @@ const app = express()
 const cors = require('cors')
 const bodyParser = require('body-parser');
 const connectMongooseDB = require('./db');
+const createCollections = require('./createCollections');
 require('dotenv').config()
 
 const verify = require('./middleware/verify') 
@@ -29,7 +30,7 @@ let URL;
 if (process.env.NODE_ENV == 'production') {
     URL = "https://hrs-flame.vercel.app"
   }else{
-    URL = "http://localhost:3000"
+    URL = "http://localhost:5173"
            
   }
 
@@ -67,3 +68,4 @@ mongoose.connection.once("open", () => {
     console.log("Connected to Mongodb")
 })
 connectMongooseDB()
+// createCollections()

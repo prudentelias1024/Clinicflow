@@ -33,15 +33,15 @@ export default function Homepage() {
 
 
     const loginMethods = [
-  {
-    icon: Fingerprint,
-    title: "Fingerprint",
-    description:
-      "Touch to verify. Your biometric identity unlocks your records in under a second.",
-    href: "/fingerprint",
-    tag: "Factor 01",
-    primary: true,
-  },
+  // {
+  //   icon: Fingerprint,
+  //   title: "Fingerprint",
+  //   description:
+  //     "Touch to verify. Your biometric identity unlocks your records in under a second.",
+  //   href: "/fingerprint",
+  //   tag: "Factor 01",
+  //   primary: true,
+  // },
   {
     icon: ScanFace,
     title: "Face Recognition",
@@ -94,7 +94,7 @@ const stats = [
         <div className="mx-auto max-w-3xl text-center">
           <p className="animate-rise-in mx-auto inline-flex items-center gap-2 rounded-full border borderprimary/20 bg-secondary px-4 py-1.5 text-xs font-bold tracking-widest text-primary uppercase">
             <ShieldCheck className="size-3.5" />
-            LASU Health Records System
+            Clinicflow Health Records System
           </p>
           <h1
             className="animate-rise-in mt-6 font-display text-4xl leading-[1.08] font-bold tracking-tight text-foreground sm:text-6xl"
@@ -116,7 +116,7 @@ const stats = [
         </div>
 
         {/* Login method cards */}
-        <div className="mt-14 grid gap-5 sm:mt-16 md:grid-cols-3">
+        <div className="mt-14 grid gap-5 sm:mt-16 md:grid-cols-3 lg:pl-[15em]">
           {loginMethods.map((method, i) => (
             <a
               key={method.title}

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const Appointment = new mongoose.Schema({
+const patient = new mongoose.Schema({
      full_name:{type:String, required:true},
      dob: {type:Date, required:true},
 
@@ -18,4 +18,4 @@ const Appointment = new mongoose.Schema({
 
 })
 
-module.exports = mongoose.model("appointment", Appointment)
+module.exports = mongoose.model("patient", patient)

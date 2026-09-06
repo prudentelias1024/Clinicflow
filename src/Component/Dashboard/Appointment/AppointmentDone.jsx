@@ -1,6 +1,6 @@
 import React from 'react'
 import patientImage from '../../../logo.png'
-import * as moment from 'moment'
+import moment from 'moment'
 
 export default function AppointmentDone({title, appointments}) {
   const dayArray = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday','Saturday', 'Sunday']
