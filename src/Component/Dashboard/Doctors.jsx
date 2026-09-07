@@ -7,6 +7,10 @@ import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 
+import { PageHeader } from './DashboardShell'
+import { StethoscopeIcon } from 'lucide-react'
+
+
 export default function Doctors() {
   const docIdRef = useRef()
   const user = useSelector(state => state.currentUser)
@@ -36,7 +40,17 @@ export default function Doctors() {
     <SideNav />
     <div className="dashboard ml-[15%] w-full flex flex-col ">
     <ProfileNavbar/>
-
+      <div className="animate-rise-in ml-[2em] pt-[3em]">
+                                    <PageHeader
+                                      icon={StethoscopeIcon}
+                                      title="My Doctors"
+                                      description="Security and account options for your Clinicflow profile."
+                                    />
+                
+ {
+      doctors && doctors.length > 0 ?
+       <>
+      
    <p className="font-[Outfit] p-[1em] font-bold text-2xl">Doctors </p> 
    <div className="flex flex-col">
 
@@ -49,12 +63,15 @@ export default function Doctors() {
       <p className="draw ">Action</p>
       
       </div>
-
+      </div>
+      </div>
+       </>
+ :   <p className="text-center text-[#7e7d7d] lg:mt-[10em]">No Doctors assigned to you yet</p>}
 
 
       {/* test section */}
       {
-        doctors != null && doctors.length > 0 ?
+        doctors !== null && doctors.length > 0 ?
         doctors.map((doctor) => {
           return   <div className="test_done border rounded-md w-[98%]   bg-white grid grid-cols-4 p-[.5em]">
           <div className='inline-flex'>
@@ -76,8 +93,7 @@ export default function Doctors() {
 
 
    </div>
-
-   </div>
-   </div>
-   </div>  )
+</div>
+ </div>
+  )
 }
