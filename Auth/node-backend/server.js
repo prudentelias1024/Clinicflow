@@ -28,7 +28,7 @@ const userRouter = require('./routes/userRoutes')
 
 let URL;
 if (process.env.NODE_ENV == 'production') {
-    URL = "https://hrs-flame.vercel.app"
+    URL = "https://clinicflow-sigma-puce.vercel.app"
   }else{
     URL = "http://localhost:5173"
            
