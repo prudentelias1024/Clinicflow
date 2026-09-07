@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState , useEffect} from 'react'
 
 import clinicflow from '../../../logo.png'
 import { Link,  useNavigate } from 'react-router-dom'
@@ -21,7 +21,12 @@ export default function NativeLogin() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-
+  useEffect(() => {
+    const accessToken = localStorage.getItem('access-token');
+    if (accessToken) {
+      navigate('/Dashboard');
+    }  
+},[])
   const login = async() => {
     setEmailError('')
     setPasswordError('')
@@ -32,6 +37,7 @@ export default function NativeLogin() {
     }
    
     console.log(formData);
+    console.log(URL)
     let res = (await axios.post(`${URL}/api/native/login`,formData)).data
     console.log(res)
     if (res.emailError) {

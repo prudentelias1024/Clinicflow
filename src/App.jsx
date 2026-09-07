@@ -8,7 +8,7 @@ import NativeLogin from './Component/Login/Native Authentication/NativeLogin.jsx
 import NativeRegistration from './Component/Login/Native Authentication/NativeRegistration.jsx';
 import Dashboard from './Component/Dashboard.jsx';
 import MedicalInfo from './Component/Dashboard/Medical Info/MedicalInfo.jsx';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { actions } from './store/index.js';
 import Appointments from './Component/Dashboard/Appointment/Appointments.jsx';
 import Settings from './Component/Dashboard/Settings.jsx';
@@ -33,14 +33,13 @@ import Homepage from './Homepage.jsx';
 function App() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const url = import.meta.env.PROD ? import.meta.env.VITE_API_PROD_URL : import.meta.env.VITE_API_DEV_URL
-  useDispatch(actions.updateURL(url))
-  
+  const { URL } = useSelector(state => state)
  
   const getUser = async() => {
+ 
     try{
 
-    const res =  (await axios.get(`${url}/api/user`,{headers: {Authorization: localStorage.getItem('access-token')}})).data
+    const res =  (await axios.get(`${URL}/api/user`,{headers: {Authorization: localStorage.getItem('access-token')}})).data
     console.log(res)
     if(res.user){
       dispatch(actions.updateUser(res.user))
@@ -60,7 +59,7 @@ function App() {
   }
   const getMedicalInfo = async() => {
     
-    const res = await(await axios.get(`${url}/api/medicalInfo`, {headers: {Authorization: localStorage.getItem('access-token')}})).data
+    const res = await(await axios.get(`${URL}/api/medicalInfo`, {headers: {Authorization: localStorage.getItem('access-token')}})).data
     console.log(res)
     dispatch(actions.updateMedicalInfo(res.medical_info))
   }
