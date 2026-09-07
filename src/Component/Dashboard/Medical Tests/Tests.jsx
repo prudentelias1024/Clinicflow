@@ -4,7 +4,8 @@ import ProfileNavbar from '../ProfileNavbar'
 import TestResults from './TestResults'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
-
+import { PageHeader } from '../DashboardShell'
+import { TestTubes} from 'lucide-react'
 export default function Tests() {
   const [tests, setTests] = useState([])
     const URL = useSelector(state => state.URL)
@@ -37,7 +38,15 @@ export default function Tests() {
     <SideNav />
     <div className="dashboard ml-[15%] w-full flex flex-col ">
       <ProfileNavbar/>
+       <div className="animate-rise-in ml-[3em] pt-[3em]">
+                                            <PageHeader
+                                              icon={TestTubes}
+                                              title="My Medical Tests"
+                                              description="Security and account options for your Clinicflow profile."
+                                            />
       <TestResults tests={tests}/>
+
+      </div>
    </div>
    </div>
   )

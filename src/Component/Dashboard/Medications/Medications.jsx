@@ -38,6 +38,7 @@ export default function Medications() {
   return (
     <div className='flex flex-row justify-between h-full bg-[#FAFBFB]'>
     <SideNav/>
+    
     <div className="dashboard ml-[15%] w-full flex flex-col ">
       
       {/* <ProfileNavbar/> */}
@@ -49,6 +50,10 @@ export default function Medications() {
                                       />
                   
       <div className=" flex flex-col gap-[1em]">
+
+        {
+      medications && medications.length > 0 ?
+       <>
     <div className="header bg-[#f1f1f1] mt-[1em] text-[#7e7d7d]  grid grid-cols-5 py-[1em] text-xs uppercase pl-[2em]">
     <p className="ref">Supervised by</p>
    
@@ -59,9 +64,12 @@ export default function Medications() {
     {/* <p className="ref">Ref</p> */}
     {/* <p className="ref">Document Attached</p> */}
     </div>
+</>
+    : <p className="text-center text-[#7e7d7d] lg:mt-[10em]">No medications found</p>
+        }
 
     {
-      medications.map((medication) => {
+      medications !== undefined && medications.length > 0 && medications.map((medication) => {
         return    <div className="test_done grid grid-cols-5 pl-[1.5em]">
               <div className='inline-flex'>
             <img src={"http://localhost:8000/api"+ medication.prescribed_by.user_id.profile_img} alt='doctor_image' className='h-[2em] w-[2em] rounded-full'/>
