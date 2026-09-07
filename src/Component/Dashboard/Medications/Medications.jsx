@@ -3,6 +3,9 @@ import SideNav from '../SideNav'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 
+import { PageHeader } from '../DashboardShell'
+import {PillIcon } from 'lucide-react'
+
 export default function Medications() {
     const user = useSelector(state => state.currentUser)
     const URL = useSelector(state => state.URL)
@@ -36,7 +39,15 @@ export default function Medications() {
     <div className='flex flex-row justify-between h-full bg-[#FAFBFB]'>
     <SideNav/>
     <div className="dashboard ml-[15%] w-full flex flex-col ">
+      
       {/* <ProfileNavbar/> */}
+        <div className="animate-rise-in ml-[3em] pt-[3em]">
+                                      <PageHeader
+                                        icon={PillIcon}
+                                        title="My Medications"
+                                        description="Security and account options for your Clinicflow profile."
+                                      />
+                  
       <div className=" flex flex-col gap-[1em]">
     <div className="header bg-[#f1f1f1] mt-[1em] text-[#7e7d7d]  grid grid-cols-5 py-[1em] text-xs uppercase pl-[2em]">
     <p className="ref">Supervised by</p>
@@ -74,6 +85,7 @@ export default function Medications() {
       }   
 
      </div>
+      </div>
       </div>
       </div>
    

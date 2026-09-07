@@ -37,7 +37,7 @@ export default function Settings() {
       title: "Two-factor authentication",
       description:
         "Add face recognition to secure your records and account activity.",
-      enrolled: true,
+      enrolled: user.enrolled_face,
       actionLabel: "Enrol face",
     },
     {
@@ -45,7 +45,7 @@ export default function Settings() {
       title: "Three-factor authentication",
       description:
         "Add fingerprint security to protect your medical records and activity.",
-      enrolled: true,
+      enrolled:user.enrolled_fingerint,
       actionLabel: "Enrol fingerprint",
     },
   ];
@@ -76,7 +76,7 @@ export default function Settings() {
                   {title}
                 </h2>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  {user.full_name}
+                  {description}
                 </p>
               </div>
             </div>

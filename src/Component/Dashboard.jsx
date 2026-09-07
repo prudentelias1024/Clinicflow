@@ -5,6 +5,19 @@ import ProfileNavbar from './Dashboard/ProfileNavbar'
 import { AiFillMail, AiOutlineClockCircle, AiOutlineHome, AiOutlineMail, AiOutlinePhone, AiOutlineUser } from 'react-icons/ai'
 import { Link, useNavigate } from 'react-router-dom'
 import 'chart.js/auto'
+import {
+  ArrowRight,
+  CalendarDays,
+  Clock,
+  FlaskConical,
+  HeartPulse,
+  Mail,
+  Phone,
+  Pill,
+  Ruler,
+  User,
+  Weight,
+} from "lucide-react";
 import {  GiMedicines } from 'react-icons/gi'
 import human from '../human.jpg'
 import humanHeart from '../heart.jpg'
@@ -15,9 +28,12 @@ import MyPatientHeader from './Patient/MyPatientHeader'
 import AppointmentDone from './Dashboard/Appointment/AppointmentDone'
 import MyPatient from './Patient/MyPatient.jsx'
 import moment from 'moment'
+import { PageHeader } from './Dashboard/DashboardShell.jsx'
 export default function Dashboard() {
-  
+ 
   const user = useSelector(state =>state.currentUser)
+   const firstName = user.full_name.split(" ")[0];
+
   const URL = useSelector(state =>state.URL)
   const medicalInfo = useSelector(state => state.medical_info)
   const dispatch = useDispatch()
@@ -25,12 +41,33 @@ export default function Dashboard() {
   const [patientsCount , setPatientsCount] = useState(null)
   const [patients , setPatients] = useState([])
   const [appointments , setAppointments] = useState([])
+  const [doneAppointments , setDoneAppointments] = useState([])
+  const [doneAppointmentsCount, setDoneAppointmentsCount] = useState(null)
+
   const [appointmentCount , setAppointmentsCount] = useState(null)
   const [testsCount , setTestsCount] = useState(null)
   const [tests , setTests] = useState([])
   const [medicationsCount , setMedicationsCount] = useState(null)
   const [medications , setMedications] = useState([])
   console.log(URL)
+
+   const getDoneAppointments = async() => {
+        let url = ''
+        if(user && user.type == 'doctor'){
+          url = `${URL}/api/appointments/done/my`
+         }else{
+           url = `${URL}/api/appointments/done`
+         }
+        
+        const res =  (await axios.get(url,{headers: {Authorization: localStorage.getItem('access-token')}})).data
+        console.log(res)
+        if(res.status === 200){
+          setDoneAppointments(res.appointments)
+          setDoneAppointmentsCount(res.appointments.length)
+          console.log(res.appointments);
+         } 
+        }
+
   const getPatients = async() => {
     const res =  (await axios.get(`${URL}/api/patients/my`,{headers: {Authorization: localStorage.getItem('access-token')}})).data
     console.log(res)
@@ -101,7 +138,44 @@ export default function Dashboard() {
     setTestsCount(0)
    }
   }
-   
+   const stats = [
+  {
+    label: "Upcoming appointments",
+    value: appointments.length,
+    icon: CalendarDays,
+  },
+  {
+    label: "Past visits",
+    value: doneAppointments.length,
+    icon: Clock,
+  },
+  { label: "Test results", value: tests.length, icon: FlaskConical },
+  {
+    label: "Active medications",
+    value: medications.filter((m) => m.active).length,
+    icon: Pill,
+  },
+];
+
+const vitals = [
+  { label: "Blood pressure", value: `${medicalInfo ==  undefined || medicalInfo == null ? 'N/A' : medicalInfo.blood_pressure} mmHg` },
+  { label: "Heart rate", value: `${medicalInfo == undefined || medicalInfo ==null ? 'N/A' : medicalInfo.pulse} bpm` },
+  { label: "Cholesterol", value: `${medicalInfo == undefined || medicalInfo == null ? 'N/A' : medicalInfo.cholesterol} mg/dL` },
+  { label: "Blood sugar", value: `${medicalInfo == undefined || medicalInfo ==null   ? 'N/A' : medicalInfo.blood_sugar} mg/dL` },
+];
+
+const body = [
+  { label: "Weight", value: `${medicalInfo == undefined || medicalInfo ==null  ? 'N/A' : medicalInfo.weight} kg`, icon: Weight },
+  { label: "Height", value: `${medicalInfo == undefined || medicalInfo == null ? 'N/A' : medicalInfo.height}`, icon: Ruler },
+  { label: "BMI", value: `${medicalInfo !== undefined || medicalInfo == null ? 'N/A' : medicalInfo.bmi}`, icon: HeartPulse },
+];
+
+const profileFacts = [
+  { label: "Gender", value: user.gender, icon: User },
+  { label: "Date of birth", value: user.dob, icon: CalendarDays },
+  { label: "Email", value: user.email, icon: Mail },
+  { label: "Phone", value: user.phone_no, icon: Phone },
+];
  
    useEffect(() => {
     //  getUser()
@@ -110,252 +184,242 @@ export default function Dashboard() {
     //     track.stop()
     //   })
     // })
-    console.log(user)
+    console.log(medicalInfo)
 
     if(user !== null){
 
       getAppointments()
+      getDoneAppointments()
       getTests()
       getMedications()
       getPatients()
     }
     },[user,appointmentCount, testsCount, medicationsCount, patientsCount])
     
-     if(user && user.type !== 'patient'){
+     if(user && user.type == 'patient'){
     return (
       
     <div className='flex flex-row  font-[Outfit] bg-[#fafbfb] justify-between h-full'>
     <SideNav />
-    <div className="dashboard ml-[15%] flex flex-row gap-[1em] justify-between">
-      <div className='flex flex-col gap-[1em]'>
-      <div className="info shadow-md  flex flex-col bg-white ml-[1em] p-[2em]  gap-[1.5em]">
-      <img src={`${URL}/api/`+user.profile_img} alt={user.full_name} className='h-[5em] w-[5em] object-cover m-auto rounded-full'/>
-          <p className="font-bold capitalize m-auto">{user? user.full_name:''}</p>
-      
-      <div className=" w-[20em] flex flex-wrap gap-[1em]">
-        <div className="gender flex flex-row gap-[.5em] ">
-          <AiOutlineUser className='text-xl mt-[.5em]'/>
-          <div>   
-          <p className="text-[#cfcece] font-semibold">Gender</p>
-          <p className="font-bold capitalize">{user? user.gender:''}</p>
+    <div className="animate-rise-in lg:ml-[17.5em] lg:pt-[4em]">
+      <PageHeader
+        icon={HeartPulse}
+        title={`Hello, ${firstName}`}
+        description="Here is a snapshot of your health record at the Clinicflow."
+      />
+
+      {/* Stats */}
+      <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
+        {stats.map(({ label, value, icon: Icon }) => (
+          <div
+            key={label}
+            className="card-hover-lift rounded-2xl border border-border bg-card p-5"
+          >
+            <div className="flex items-center justify-between">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <Icon className="h-5 w-5" />
+              </span>
+              <span className="font-display text-3xl font-bold text-foreground">
+                {value}
+              </span>
+            </div>
+            <p className="mt-3 text-sm font-semibold text-muted-foreground">
+              {label}
+            </p>
           </div>
-        </div>
-
-        <div className="gender flex flex-row gap-[.5em] ">
-          <AiOutlineClockCircle className='text-xl mt-[.5em]'/>
-          <div>   
-          <p className="text-[#cfcece] font-semibold">Dob</p>
-          <p className="font-bold capitalize">{user? user.dob:''}</p>
-          </div>
-        </div>
-
-
-        <div className="gender flex flex-row gap-[.5em] ">
-          <AiOutlineMail className='text-xl mt-[.5em]'/>
-          <div>   
-          <p className="text-[#cfcece] font-semibold">Email</p>
-          <p className="font-bold ">{user? user.email:''}</p>
-          </div>
-        </div>
-
-        <div className="gender flex flex-row gap-[.5em] ">
-          <AiOutlinePhone className='text-xl mt-[.5em]'/>
-          <div>   
-          <p className="text-[#cfcece] font-semibold">Contact</p>
-          <p className="font-bold capitalize">{user? user.phone_no:''}</p>
-          </div>
-        </div>
-
-
-
+        ))}
       </div>
-      
 
+      <div className="mt-8 grid gap-6 lg:grid-cols-5">
+        {/* Left column: profile + appointments */}
+        <div className="flex flex-col gap-6 lg:col-span-3">
+          {/* Profile card */}
+          <section className="rounded-2xl border border-border bg-card p-6">
+            <div className="flex flex-wrap items-center gap-4">
+              <span className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-xl font-bold text-primary-foreground">
+                {user.full_name
+                  .split(" ")
+                  .map((p) => p[0])
+                  .slice(0, 2)
+                  .join("")}
+              </span>
+              <div>
+                <h2 className="font-display text-xl font-bold text-foreground">
+                  {user.full_name}
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  {user._id} · Blood group {medicalInfo.blood_group == undefined || medicalInfo ==null ? 'N/A' : medicalInfo.blood_group} ·{" "}
+                  {medicalInfo.genotype == undefined || medicalInfo ==null ? 'N/A' : medicalInfo.genotype}
+                </p>
+              </div>
+            </div>
+            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {profileFacts.map(({ label, value, icon: Icon }) => (
+                <div key={label} className="flex items-center gap-3">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-secondary text-primary">
+                    <Icon className="h-4 w-4" />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="text-xs font-semibold text-muted-foreground">
+                      {label}
+                    </p>
+                    <p className="truncate text-sm font-bold text-foreground">
+                      {value}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Upcoming appointments */}
+          <section className="rounded-2xl border border-border bg-card p-6">
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="font-display text-lg font-bold text-foreground">
+                Upcoming appointments
+              </h2>
+              <Link
+                to="/dashboard/appointment"
+                className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
+              >
+                View all <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+            <div className="flex flex-col divide-y divide-border">
+              {appointments.map((appt) => (
+                <div key={appt.id} className="flex items-start gap-4 py-4 first:pt-0 last:pb-0">
+                  <span className="flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <CalendarDays className="h-5 w-5" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-bold text-foreground">
+                      {appt.title}
+                    </p>
+                    <p className="text-xs font-semibold text-muted-foreground">
+                      {appt.specialization} · {appt.doctor}
+                    </p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      {appt.date} · {appt.startTime} – {appt.endTime}
+                    </p>
+                  </div>
+                  <span className="shrink-0 rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
+                    Upcoming
+                  </span>
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
+
+        {/* Right column: vitals + lists */}
+        <div className="flex flex-col gap-6 lg:col-span-2">
+          <section className="rounded-2xl border border-border bg-card p-6">
+            <h2 className="font-display text-lg font-bold text-foreground">
+              Heart vitals
+            </h2>
+            <div className="mt-4 grid grid-cols-2 gap-3">
+              {vitals.map((v) => (
+                <div
+                  key={v.label}
+                  className="rounded-xl bg-secondary p-4 text-center"
+                >
+                  <p className="text-xs font-semibold text-muted-foreground">
+                    {v.label}
+                  </p>
+                  <p className="mt-1 font-display text-base font-bold text-foreground">
+                    {v.value}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-3 grid grid-cols-3 gap-3">
+              {body.map(({ label, value, icon: Icon }) => (
+                <div
+                  key={label}
+                  className="rounded-xl border border-border p-3 text-center"
+                >
+                  <Icon className="mx-auto h-4 w-4 text-primary" />
+                  <p className="mt-2 text-xs font-semibold text-muted-foreground">
+                    {label}
+                  </p>
+                  <p className="font-display text-sm font-bold text-foreground">
+                    {value}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="rounded-2xl border border-border bg-card p-6">
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="font-display text-lg font-bold text-foreground">
+                Recent tests
+              </h2>
+              <Link
+                to="/dashboard/tests"
+                className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
+              >
+                View all <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+            <ul className="flex flex-col divide-y divide-border">
+              {tests.slice(0, 3).map((test) => (
+                <li key={test.id} className="py-3 first:pt-0 last:pb-0">
+                  <p className="text-sm font-bold text-foreground">
+                    {test.type}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {test.doctor} · {test.releasedOn}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section className="rounded-2xl border border-border bg-card p-6">
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="font-display text-lg font-bold text-foreground">
+                Medications
+              </h2>
+              <Link
+                to="/dashboard/medications"
+                className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
+              >
+                View all <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+            <ul className="flex flex-col divide-y divide-border">
+              {medications.slice(0, 3).map((med) => (
+                <li
+                  key={med.id}
+                  className="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0"
+                >
+                  <div>
+                    <p className="text-sm font-bold text-foreground">
+                      {med.name}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {med.dosage} · {med.frequency}
+                    </p>
+                  </div>
+                  <span
+                    className={
+                      med.active
+                        ? "shrink-0 rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-bold text-primary"
+                        : "shrink-0 rounded-full bg-muted px-2.5 py-0.5 text-[11px] font-bold text-muted-foreground"
+                    }
+                  >
+                    {med.active ? "Active" : "Completed"}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        </div>
+      </div>
     </div>
-      <div className="appointment_history shadow-md bg-white py-[2em] ml-[1em] flex flex-col">
-   
-      <p className="specialty font-bold capitalize text-xl mb-[1em] mx-auto"> Appointment History</p>
-      
-{
-  appointments.length > 0 ? appointments.map((appointment) => {
-    return      <div className="appointment p-[1em] border border-l-0 border-r-0 border-t border-b">
-    
-    <p className="specialty font-bold capitalize"> {appointment.specialist.specialization}</p>
-    <p className="title font-bold "> {appointment.title}</p>
-    <p className="doctor_name font-semibold text-[#cfcece] capitalize"> Dr. {appointment.specialist.user_id.full_name}</p>
-    <p className="doctor_name font-semibold text-[#cfcece] "> 
-    {moment(appointment.appointment_start_time).format(' h:mm a')}
-       -
-    {moment(appointment.appointment_end_time).format(' h:mm a')}
-    , {moment(appointment.end_time).format('MMM Do YYYY')} </p>
-      
-       
-        </div>
 
-  }) : 
-  <p className="font-bold  font-[Outfit] text-base m-auto mt-[20%] mb-[20%] text-[#7e7d7d]  text-center ">No appointment yet</p>
-
-}
-    
-  {
-    appointments.length > 0?
-    <Link to='/dashboard/appointment' className='font-medium my-[1em]  text-blue-500 m-auto text-base'>View Previous appointments</Link>: ''
-  }
-      </div>
-      </div>
-
-
-
-<div className='flex flex-col gap-[1em]'>
-
-
-  <div className="test_history h-fit shadow-md bg-white py-[2em] w-[20em] ml-[.5em] flex flex-col">
-
-<p className="specialty font-bold capitalize text-xl mb-[1em] mx-auto">Previous Test</p>
-
-{
-  tests.length > 0 ? tests.map((test) => {
-      return  <> <div className="appointment p-[1em] border border-l-0 border-r-0 border-t border-b">
-      
-      <p className="specialty font-bold capitalize">{test.type}</p>
-      <p className="doctor_name font-semibold text-[#cfcece] capitalize"> Dr. {test.specialist.user_id.full_name}</p>
-      <p className="doctor_name font-semibold text-[#cfcece] capitalize">  {moment(test.released_on).format('MMMM Do YYYY h:s a')}</p>
-        
-         
-          </div>
-      
-      
-</>
-  }): <p className="font-bold  font-[Outfit] text-base m-auto mt-[20%] mb-[20%] text-[#7e7d7d]  text-center ">No Test result yet</p>
-
-}
-{tests.length > 0? 
-  <Link to='/dashboard/Tests' className='font-medium my-[1em]  text-blue-500 m-auto text-base'>View Previous test</Link>: ''
-}
-</div>
-
-  <div className="medication_history shadow-md h-fit bg-white py-[2em] w-[20em] ml-[.5em] flex flex-col">
-
-<p className="specialty font-bold capitalize text-xl mb-[1em] mx-auto">Previous Medications</p>
-
-{
-  medications.length > 0? medications.map((medication) => {
- return <div className="medication p-[1em] border border-l-0 border-r-0 border-t border-b">
-
-<div className="flex flex-row justify-between">
-<div className="flex flex-col">
-
-<p className="drug_name text-lg font-bold capitalize">{medication.name}</p>
-<p className="doctor_name font-semibold text-[#cfcece] capitalize"> Dr. {medication.prescribed_by.user_id.full_name}</p>
-</div>
-<div className="flex flex-row flex-wrap w-[3.5em]">
-  {
-    Array.from({length: medication.dosage.split('/')[0]}).map((index) => {
-      return <GiMedicines key={index} className='text-2xl text-red-800'/>
-
-    })
-  }
-</div>
-
-</div>
-  
-   
-    </div>   
-  }) :
-  <p className="font-bold  font-[Outfit] text-base m-auto mt-[20%] mb-[20%] text-[#7e7d7d]  text-center ">No Medications yet</p>
-
-
-}
-
- 
-   
-{
-  medications.length > 0?
-  
-<Link to='/dashboard/Tests' className='font-medium my-[1em]  text-blue-500 m-auto text-base'>View Previous medication</Link> : ''
-}  
-</div>
-
-
-</div>
-
-    {/* <div className='bg-white p-[1em]'>
-
-        <div className="flex flex-row justify-between">
-
-        <p className="font-semibold text-lg ml-[.5em]">Your BMI </p>
-        <p className="font-semibold text-lg ml-[.5em]">Today: 19.5 </p>
-        </div>
-        <Line className='font-[Outfit]'  data={data} options={options} />
-      </div>
-      */}
-
-     <div className="vitals flex flex-col gap-[0em]">
-
-      <div className="medical_visual h-fit shadow-md bg-white py-[2em] w-[20em] ml-[.5em] flex flex-col">
-
-      <p className="font-bold text-xl m-auto">Heart vitals</p>
-
-      <img src={humanHeart} alt="heart" className='h-4/5 w-4/5 m-auto'/>
-      <div className='flex flex-row flex-wrap justify-evenly gap-[1em]'>
-
-     <div className="blood_pressure text-center    flex flex-col">
-
-      <p className="font-bold text-xl">Blood Pressure</p>
-      <p className="font-normal">{medicalInfo ?medicalInfo.blood_pressure: ''} mmHg</p>
-     </div>
-     <div className="pulse  text-center  flex flex-col">
-      <p className="font-bold text-xl">Heartbeat count</p>
-      <p className="font-normal">{medicalInfo ?medicalInfo.pulse: ''}bpm</p>
-     </div>
-     <div className="pulse  text-center  flex flex-col">
-      <p className="font-bold text-xl">Cholesterol </p>
-      <p className="font-normal">{medicalInfo ?medicalInfo.cholesterol: ''} mg/dL</p>
-     </div>
-     <div className="pulse  text-center  flex flex-col">
-      <p className="font-bold text-xl">Blood Sugar </p>
-      <p className="font-normal">{medicalInfo ?medicalInfo.blood_sugar: ''} mg/dL</p>
-     </div>
-      </div>
-      </div>
-
-<hr />
-
-      <div className="medical_visual h-fit shadow-md bg-white py-[1em] w-[20em] ml-[.5em] flex flex-col">
-
-      {/* <p className="font-bold text-xl m-auto">Heart vitals</p> */}
-
-      <img src={human} alt="heart" className='h-1/2 w-1/2 object-contain m-auto'/>
-      <div className='flex flex-row flex-wrap justify-evenly gap-[1em]'>
-
-     <div className="blood_pressure text-center    flex flex-col">
-
-      <p className="font-bold text-xl">Your Weight</p>
-      <p className="font-normal">{medicalInfo ?medicalInfo.weight : ''} Kg</p>
-     </div>
-     <div className="pulse  text-center  flex flex-col">
-      <p className="font-bold text-xl">Height </p>
-      <p className="font-normal">{medicalInfo ?medicalInfo.height : ''}</p>
-     </div>
-     <div className="pulse  text-center  flex flex-col">
-      <p className="font-bold text-xl">Body Mass Index </p>
-      <p className="font-normal">{medicalInfo ? Number(medicalInfo.bmi).toFixed(1): 's'}</p>
-     </div>
-      </div>
-      </div>
-
-
-
-      <Link to='/dashboard/MedicalInfo' className='font-medium bg-white my-[1em]  text-blue-500 m-auto text-base'>View medical information</Link>
-</div>
-
-
-      </div>
-
-
-
-</div>
-    
+   </div> 
   )
 }else {
   return (

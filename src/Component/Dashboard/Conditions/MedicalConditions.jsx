@@ -10,12 +10,14 @@ import { TiPipette } from 'react-icons/ti'
 import { RiErrorWarningFill } from 'react-icons/ri'
 import { useSelector } from 'react-redux'
 import moment from 'moment'
+import { PageHeader } from '../DashboardShell'
+import { HeartPulse } from 'lucide-react'
 
 export default function MedicalConditions() {
   
   const medicalInfo = useSelector(state => state.medical_info)
-  const bp_top = Number(medicalInfo.blood_pressure.split('/')[0])
-  const bp_bottom = Number(medicalInfo.blood_pressure.split('/')[1])
+  const bp_top = Number(medicalInfo == undefined || null ?medicalInfo.blood_pressure.split('/')[0]: 'N/A ')
+  const bp_bottom = Number(medicalInfo == undefined || null ?medicalInfo.blood_pressure.split('/')[1]: 'N/A ')
 
     if(medicalInfo != null){
     return (
@@ -23,6 +25,14 @@ export default function MedicalConditions() {
           <SideNav/>
           <div className=" flex flex-col info ml-[13%] w-full py-[1em] px-[4em]">
               <ProfileNavbar/>
+
+               <div className="animate-rise-in ml-[7em] pt-[3em]">
+                    <PageHeader
+                      icon={HeartPulse}
+                      title="My Medical Condition"
+                      description="Security and account options for your Clinicflow profile."
+                    />
+              
               {
                 moment(medicalInfo.date_added).fromNow(true) == '2 months'?
               
@@ -32,7 +42,7 @@ export default function MedicalConditions() {
               </div>
                 : ''
               }
-              <div className="info flex flex-row flex-wrap gap-[.6em]">
+              <div className="info flex flex-row flex-wrap gap-[1em]">
                
                   
                   <div className="weight border shadow-md rounded-lg bg-white w-[20em] p-[1em] flex flex-col gap-[.5em] font-[Outfit]">
@@ -194,6 +204,7 @@ export default function MedicalConditions() {
   
               </div>
           </div>
+      </div>
       </div>
     )
     }else {

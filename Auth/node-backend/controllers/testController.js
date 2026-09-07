@@ -1,7 +1,7 @@
 const test = require('../schema/testSchema')
 
 exports.get_user_test =async(req,res) =>{
-  test.find({patient: req.user.three_fa_id }).exec((err,tests) => {
+  test.find({patient: req.user._id }).exec((err,tests) => {
     if(err){throw err}
     if(tests){
         res.send({status: 200,tests:tests})

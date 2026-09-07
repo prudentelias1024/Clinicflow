@@ -37,8 +37,9 @@ function App() {
   const getUser = async() => {
     const res =  (await axios.get('http://localhost:8000/api/user',{headers: {Authorization: localStorage.getItem('access-token')}})).data
     console.log(res)
-    if(res.status === 200){
+    if(res.user){
       dispatch(actions.updateUser(res.user))
+      console.log(res.user)
       navigate('/Dashboard')
    
      } 

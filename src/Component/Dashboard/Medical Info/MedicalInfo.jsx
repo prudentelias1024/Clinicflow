@@ -9,6 +9,9 @@ import { FaHeartbeat } from 'react-icons/fa'
 import { TiPipette } from 'react-icons/ti'
 import { RiErrorWarningFill } from 'react-icons/ri'
 import { useSelector } from 'react-redux'
+
+import { PageHeader } from '../DashboardShell'
+import { HeartPulse } from 'lucide-react'
 import moment from 'moment'
 export default function MedicalInfo() {
  
@@ -18,7 +21,14 @@ export default function MedicalInfo() {
     <div className='flex flex-row bg-[#FAFBFB] h-full'>
         <SideNav/>
         <div className=" flex flex-col info ml-[13%] w-full py-[1em] px-[4em]">
+
             <ProfileNavbar/>
+               <div className="animate-rise-in ml-[7em] pt-[3em]">
+                                <PageHeader
+                                  icon={HeartPulse}
+                                  title="My Medical Information"
+                                  description="Security and account options for your Clinicflow profile."
+                                />
             {
               moment(medicalInfo.date_added).fromNow(true) == '2 months'?
             
@@ -122,6 +132,7 @@ export default function MedicalInfo() {
 
 
             </div>
+        </div>
         </div>
     </div>
   )

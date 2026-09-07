@@ -11,7 +11,7 @@ export default function SideNav() {
   const user = useSelector(state =>state.currentUser)
   return (
     <>
-    <div className="flex flex-col gap-[2em] w-[15%] h-full p-[2em] fixed  bg-blue-500 text-white">
+    <div className=" flex-col gap-[2em] w-[15%] h-full p-[2em] hidden lg:flex fixed  bg-blue-500 text-white">
         <Link to="/Dashboard" className=' inline-flex gap-[1em] font-[Outfit] mt-[3em]'>
         <MdSpaceDashboard className='text-2xl text-white' />
         <p className="">Dashboard</p>
