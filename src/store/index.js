@@ -3,8 +3,12 @@ import {createSlice,configureStore} from '@reduxjs/toolkit'
 
 const appSlice = createSlice({
     name: 'store',
-    initialState: {currentUser: null, medical_info: null, URL: null},
+    initialState: {currentUser: null, medical_info: null, URL: null, loading: true},
     reducers: {
+        updateLoading(state,action){
+             state.loading = action.payload
+        },
+       
         updateUser(state,action){
              state.currentUser = action.payload
         },

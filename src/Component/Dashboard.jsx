@@ -31,8 +31,8 @@ import moment from 'moment'
 import { PageHeader } from './Dashboard/DashboardShell.jsx'
 export default function Dashboard() {
  
-  const user = useSelector(state =>state.currentUser)
-   const firstName = user.full_name.split(" ")[0];
+  const {currentUser, loading} = useSelector(state =>state)
+  
 
   const URL = useSelector(state =>state.URL)
   const medicalInfo = useSelector(state => state.medical_info)
@@ -53,7 +53,7 @@ export default function Dashboard() {
 
    const getDoneAppointments = async() => {
         let url = ''
-        if(user && user.type == 'doctor'){
+        if(currentUser && currentUser.type == 'doctor'){
           url = `${URL}/api/appointments/done/my`
          }else{
            url = `${URL}/api/appointments/done`
@@ -82,7 +82,7 @@ export default function Dashboard() {
   }
    const getAppointments = async() => {
     let url = ''
-    if(user&& user.type == 'patient'){
+    if(user&& currentUser.type == 'patient'){
       url = `${URL}/api/appointments`
 
     }else {
@@ -102,7 +102,7 @@ export default function Dashboard() {
    
    const getMedications = async() => {
     let url = ''
-    if(user && user.type =='patient'){
+    if(user && currentUser.type =='patient'){
       url = `${URL}/api/medications`
 
     }else {
@@ -121,7 +121,7 @@ export default function Dashboard() {
   }
    const getTests = async() => {
     let url = ''
-    if(user && user.type == 'patient'){
+    if(currentUser && currentUser.type == 'patient'){
       url = `${URL}/api/tests`
 
     }else {
@@ -171,10 +171,10 @@ const body = [
 ];
 
 const profileFacts = [
-  { label: "Gender", value: user.gender, icon: User },
-  { label: "Date of birth", value: user.dob, icon: CalendarDays },
-  { label: "Email", value: user.email, icon: Mail },
-  { label: "Phone", value: user.phone_no, icon: Phone },
+  { label: "Gender", value: currentUser !== null ?currentUser.gender : '', icon: User },
+  { label: "Date of birth", value:currentUser !== null  ? currentUser.dob : '', icon: CalendarDays },
+  { label: "Email", value: currentUser !== null ? currentUser.email : '', icon: Mail },
+  { label: "Phone", value: currentUser !== null ? currentUser.phone_no : '', icon: Phone },
 ];
  
    useEffect(() => {
@@ -186,7 +186,7 @@ const profileFacts = [
     // })
     console.log(medicalInfo)
 
-    if(user !== null){
+    if(currentUser !== null){
 
       getAppointments()
       getDoneAppointments()
@@ -194,9 +194,10 @@ const profileFacts = [
       getMedications()
       getPatients()
     }
-    },[user,appointmentCount, testsCount, medicationsCount, patientsCount])
+    },[currentUser,appointmentCount, testsCount, medicationsCount, patientsCount])
     
-     if(user && user.type == 'patient'){
+     if(!loading){
+      if(currentUser && currentUser.type == 'patient'){
     return (
       
     <div className='flex flex-row  font-[Outfit] bg-[#fafbfb] justify-between h-full'>
@@ -204,7 +205,7 @@ const profileFacts = [
     <div className="animate-rise-in lg:ml-[17.5em] lg:pt-[4em]">
       <PageHeader
         icon={HeartPulse}
-        title={`Hello, ${firstName}`}
+        title={`Hello, ${ currentUser.full_name.split(" ")[0]}`}
         description="Here is a snapshot of your health record at the Clinicflow."
       />
 
@@ -237,7 +238,7 @@ const profileFacts = [
           <section className="rounded-2xl border border-border bg-card p-6">
             <div className="flex flex-wrap items-center gap-4">
               <span className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-xl font-bold text-primary-foreground">
-                {user.full_name
+                {currentUser.full_name
                   .split(" ")
                   .map((p) => p[0])
                   .slice(0, 2)
@@ -245,11 +246,11 @@ const profileFacts = [
               </span>
               <div>
                 <h2 className="font-display text-xl font-bold text-foreground">
-                  {user.full_name}
+                  {currentUser.full_name}
                 </h2>
                 <p className="text-sm text-muted-foreground">
-                  {user._id} · Blood group {medicalInfo.blood_group == undefined || medicalInfo ==null ? 'N/A' : medicalInfo.blood_group} ·{" "}
-                  {medicalInfo.genotype == undefined || medicalInfo ==null ? 'N/A' : medicalInfo.genotype}
+                  {currentUser._id} · Blood group {medicalInfo == undefined || medicalInfo ==null ? 'N/A' : medicalInfo.blood_group} ·{" "}
+                  {medicalInfo == undefined || medicalInfo ==null ? 'N/A' : medicalInfo.genotype}
                 </p>
               </div>
             </div>
@@ -506,5 +507,7 @@ patients != null && patients.length > 0 ?
       </>
   )
 }
-
+     }else {
+      return ''
+     }
 }

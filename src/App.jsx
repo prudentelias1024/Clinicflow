@@ -33,31 +33,32 @@ import Homepage from './Homepage.jsx';
 function App() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  let url;
+  const url = import.meta.env.PROD ? import.meta.env.VITE_API_PROD_URL : import.meta.env.VITE_API_DEV_URL
+  useDispatch(actions.updateURL(url))
+  
+ 
   const getUser = async() => {
-    const res =  (await axios.get('http://localhost:8000/api/user',{headers: {Authorization: localStorage.getItem('access-token')}})).data
+    try{
+
+    const res =  (await axios.get(`${url}/api/user`,{headers: {Authorization: localStorage.getItem('access-token')}})).data
     console.log(res)
     if(res.user){
       dispatch(actions.updateUser(res.user))
       console.log(res.user)
       navigate('/Dashboard')
    
-     } 
-     if(res.status == 403){
+     }
+     } catch(err){
+     if(err.response?.status == 403){
        navigate('/', {state: {message: 'You are not authenticated. Please login'}})
      } 
    
-   
+    }finally{
+      dispatch(actions.updateLoading(false))
+    }
   }
   const getMedicalInfo = async() => {
-    if(process.env.NODE_ENV == 'production'){
-      url = "https://hrs-3fa.onrender.com"
-      
-      dispatch(actions.updateURL(url))
-    }else{
-      url = "http://localhost:8000"
-      dispatch(actions.updateURL(url))
-    }
+    
     const res = await(await axios.get(`${url}/api/medicalInfo`, {headers: {Authorization: localStorage.getItem('access-token')}})).data
     console.log(res)
     dispatch(actions.updateMedicalInfo(res.medical_info))
