@@ -60,20 +60,16 @@ export default function Dashboard() {
          }
         
         const res =  (await axios.get(url,{headers: {Authorization: localStorage.getItem('access-token')}})).data
-        console.log(res)
         if(res.status === 200){
           setDoneAppointments(res.appointments)
           setDoneAppointmentsCount(res.appointments.length)
-          console.log(res.appointments);
          } 
         }
 
   const getPatients = async() => {
     const res =  (await axios.get(`${URL}/api/patients/my`,{headers: {Authorization: localStorage.getItem('access-token')}})).data
-    console.log(res)
     if(res.status === 200){
       setPatientsCount(res.patients.length)
-      console.log(res.patients)
       setPatients(res.patients)
      } 
      if(res.status == 404){
@@ -82,19 +78,17 @@ export default function Dashboard() {
   }
    const getAppointments = async() => {
     let url = ''
-    if(user&& currentUser.type == 'patient'){
+    if(currentUser && currentUser.type == 'patient'){
       url = `${URL}/api/appointments`
 
     }else {
       url = `${URL}/api/appointments/my`
     }
     const res =  (await axios.get(url,{headers: {Authorization: localStorage.getItem('access-token')}})).data
-    console.log(res)
     if(res.status === 200){
       setAppointmentsCount(res.appointments.length)
       setAppointments(res.appointments)
-      console.log(res.appointments);
-     } 
+    } 
      if(res.status == 404){
       setAppointmentsCount(0)
    }
@@ -102,7 +96,7 @@ export default function Dashboard() {
    
    const getMedications = async() => {
     let url = ''
-    if(user && currentUser.type =='patient'){
+    if(currentUser && currentUser.type =='patient'){
       url = `${URL}/api/medications`
 
     }else {
@@ -110,7 +104,6 @@ export default function Dashboard() {
     }
     
     const res =  (await axios.get(url,{headers: {Authorization: localStorage.getItem('access-token')}})).data
-    console.log(res)
     if(res.status === 200){
       setMedicationsCount(res.medications.length)
       setMedications(res.medications)
@@ -129,7 +122,6 @@ export default function Dashboard() {
     }
     
     const res =  (await axios.get(url,{headers: {Authorization: localStorage.getItem('access-token')}})).data
-    console.log(res)
     if(res.status === 200){
       setTestsCount(res.tests.length)
       setTests(res.tests)
@@ -205,7 +197,7 @@ const profileFacts = [
     <div className="animate-rise-in lg:ml-[17.5em] lg:pt-[4em]">
       <PageHeader
         icon={HeartPulse}
-        title={`Hello, ${ currentUser !==null ? currentUser.full_name.split(" ")[0] : '' }`}
+        title={`Hello, ${ currentUser !==null  ? currentUser.full_name.split(" ")[0] : '' }`}
         description="Here is a snapshot of your health record at the Clinicflow."
       />
 

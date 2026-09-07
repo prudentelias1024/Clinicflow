@@ -48,10 +48,11 @@ function App() {
       navigate('/Dashboard')
    
      }
-     } catch(err){
-     if(err.response?.status == 403){
-       navigate('/', {state: {message: 'You are not authenticated. Please login'}})
-     } 
+    //  } catch(err){
+    //   console.log(err)
+    // //  if(err.response?.status == 403){
+    // //    navigate('/', {state: {message: 'You are not authenticated. Please login'}})
+    // //  } 
    
     }finally{
       dispatch(actions.updateLoading(false))
