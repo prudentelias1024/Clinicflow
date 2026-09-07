@@ -3,7 +3,7 @@ import {createSlice,configureStore} from '@reduxjs/toolkit'
 
 const appSlice = createSlice({
     name: 'store',
-    initialState: {currentUser: null, medical_info: null, URL:  import.meta.env.VITE_API_URL , loading: true},
+    initialState: {currentUser: null, medical_info: null, URL: import.meta.env.PROD ? import.meta.env.VITE_API_PROD_URL : import.meta.env.VITE_API_DEV_URL, loading: true},
     reducers: {
         updateLoading(state,action){
              state.loading = action.payload

@@ -1,4 +1,5 @@
 const User = require('../schema/UserSchema')
+const Doctor = require('../schema/doctorSchema')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
@@ -17,12 +18,33 @@ exports.login = async(req,res) => {
     
             } else {    
             res.send({status:404, emailError:'User does not exist'})
-     
+                
             }
         })
     
 }
 
+
+exports.doc_login = async(req,res) => {
+  
+        Doctor.findOne({email: req.body.email}).populate('user_info').exec((err,user) => {
+            if(user){
+            hashed_password = user.password
+            if(bcrypt.compare(req.body.password, hashed_password)){
+                console.log(user)
+                  token = jwt.sign(user.email,process.env.SECRET_KEY)
+                res.send({user:user, access_token: token})
+            } else{
+                  res.send({"passwordError": "Password Incorrect"})
+            }
+    
+            } else {    
+            res.send({status:404, emailError:'User does not exist'})
+     
+            }
+        })
+    
+}
 
 exports.register = async(req,res)=> {
     const password = await bcrypt.hash(req.body.password,8)

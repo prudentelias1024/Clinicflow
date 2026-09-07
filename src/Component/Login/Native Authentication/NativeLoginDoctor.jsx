@@ -19,6 +19,7 @@ export default function NativeLoginDoctor() {
   
   const dispatch = useDispatch()
   const URL = useSelector(state => state.URL)
+
   const login = async() => {
     setEmailError('')
     setPasswordError('')
@@ -29,7 +30,7 @@ export default function NativeLoginDoctor() {
     }
    
     console.log(formData);
-    let res = (await axios.post(`${URL}/api/nativeLogin`,formData)).data
+    let res = (await axios.post(`${URL}/api/native/doc_login`,formData)).data
     console.log(res)
     if (res.emailError) {
       setEmailError(res.emailError)
@@ -62,7 +63,7 @@ export default function NativeLoginDoctor() {
         </>
       }
     >
-      <form onSubmit={login} className="flex flex-col gap-5" noValidate>
+      <form  className="flex flex-col gap-5" noValidate>
         {error && (
           <p className="flex items-center gap-2 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm font-semibold text-destructive">
             <CircleAlert className="size-4 shrink-0" />
@@ -80,8 +81,7 @@ export default function NativeLoginDoctor() {
             autoComplete="email"
             placeholder="doctor@gmail.com"
             className={fieldInput}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            ref={emailRef}
           />
         </div>
         <div>
@@ -95,11 +95,12 @@ export default function NativeLoginDoctor() {
             autoComplete="current-password"
             placeholder="Your password"
             className={fieldInput}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+          
+          
+            ref={passwordRef}
           />
         </div>
-        <button type="submit" className={primaryButton} disabled={loading}>
+        <button type="button" onClick={login} className={primaryButton} disabled={loading}>
           {loading ? (
             "Verifying credentials…"
           ) : (

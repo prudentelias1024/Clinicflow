@@ -176,7 +176,7 @@ const profileFacts = [
     //     track.stop()
     //   })
     // })
-    console.log(medicalInfo)
+    console.log(currentUser)
 
     if(currentUser !== null){
 
