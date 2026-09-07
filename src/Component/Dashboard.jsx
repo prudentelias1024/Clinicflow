@@ -205,7 +205,7 @@ const profileFacts = [
     <div className="animate-rise-in lg:ml-[17.5em] lg:pt-[4em]">
       <PageHeader
         icon={HeartPulse}
-        title={`Hello, ${ currentuser !==null ? currentUser.full_name.split(" ")[0] : '' }`}
+        title={`Hello, ${ currentUser !==null ? currentUser.full_name.split(" ")[0] : '' }`}
         description="Here is a snapshot of your health record at the Clinicflow."
       />
 
