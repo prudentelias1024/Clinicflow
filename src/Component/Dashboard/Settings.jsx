@@ -116,7 +116,7 @@ export default function Settings() {
             </div>
           </div>
           <Link
-            to="/"
+            to="/logout"
             className="rounded-xl bg-destructive px-4 py-2 text-sm font-bold text-destructive-foreground transition-colors hover:bg-destructive/90"
           >
             Log out
