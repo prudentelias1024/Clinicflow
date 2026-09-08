@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 export default function PatientView({user,onAdd, onAdded}) {
     const URL = useSelector(state => state.URL)
   const addAsPatient = async() => {
-     await (await axios.put(`${URL}/api/patients/my/add`,{userId: user.three_fa_id } ,{headers: {Authorization: localStorage.getItem('access-token')}})).data
+     await (await axios.put(`${URL}/api/patients/my/add`,{email: user.email } ,{headers: {Authorization: localStorage.getItem('access-token')}})).data
     onAdd()
     onAdded()
 

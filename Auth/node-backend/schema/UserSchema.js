@@ -13,7 +13,8 @@ const user = new mongoose.Schema({
     enrolled_face:{type:Boolean, default: () => false},
     enrolled_fingerprint:{type:Boolean, default: () => false},
     three_fa_id:{type: String, default: () => ''},
-    assigned_specialist:{type: String, default: () => ''},
+    assigned_specialist : {ref: 'Doctor', type:mongoose.Schema.Types.ObjectId},
+      
     
 
 })

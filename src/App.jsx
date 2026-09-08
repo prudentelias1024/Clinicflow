@@ -18,7 +18,7 @@ import AddTests from './Component/Dashboard/Medical Tests/AddTests.jsx';
 import Medications from './Component/Dashboard/Medications/Medications.jsx';
 import MedicalConditions from './Component/Dashboard/Conditions/MedicalConditions.jsx';
 import axios from 'axios';
-import { useEffect } from 'react';
+import { useEffect , useState} from 'react';
 import Logout from './Component/Logout.jsx';
 import NativeLoginDoctor from './Component/Login/Native Authentication/NativeLoginDoctor.jsx';
 import Patients from './Component/Dashboard/Patients.jsx';
@@ -34,16 +34,16 @@ function App() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { URL } = useSelector(state => state)
+  const [user, setUser] = useState(null)
  
   const getUser = async() => {
  
     try{
 
     const res =  (await axios.get(`${URL}/api/user`,{headers: {Authorization: localStorage.getItem('access-token')}})).data
-    console.log(res)
     if(res.user){
       dispatch(actions.updateUser(res.user))
-      console.log(res.user)
+      setUser(res.user)
       navigate('/Dashboard')
    
      }
@@ -58,12 +58,14 @@ function App() {
     }
   }
   const getMedicalInfo = async() => {
-    
+    console.log(user)
     const res = await(await axios.get(`${URL}/api/medicalInfo`, {headers: {Authorization: localStorage.getItem('access-token')}})).data
     console.log(res)
     dispatch(actions.updateMedicalInfo(res.medical_info))
   }
    useEffect(() => {
+    
+    
     getMedicalInfo()
      getUser()
     },[])

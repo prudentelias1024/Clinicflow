@@ -12,7 +12,7 @@ export default function Tests() {
     
   const user = useSelector(state => state.currentUser)
   const getTests = async() => {
-    if (user.type == 'patient') { 
+     if (user.type == 'patient') { 
     const res = await (await axios.get(`${URL}/api/tests`, {headers: {Authorization: localStorage.getItem('access-token')}})).data
     if (res.status === 200) {
       setTests(res.tests)

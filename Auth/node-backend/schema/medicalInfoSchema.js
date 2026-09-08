@@ -1,13 +1,13 @@
 const mongoose = require('mongoose')
 
 const medicalInfo = new mongoose.Schema({
-     specialist : {ref: 'doctor', type:mongoose.Schema.Types.ObjectId},
-        user_id : {ref: 'user', type:mongoose.Schema.Types.ObjectId},
+     specialist : {ref: 'doctor', type:mongoose.Schema.Types.ObjectId, required:true},
+        user_id : {ref: 'user', type:mongoose.Schema.Types.ObjectId, required:true},
         blood_pressure : {type: String, required:true},
         blood_sugar : {type: String, required:true},
         blood_group : {type: String, required:true},
-        appointment_start_time : {type: Date, required:true},
         genotype : {type: String, required:true},
+        temperature : {type: String, required:true},
         cholesterol : {type: String, required:true},
         pulse : {type: String, required:true},
         height : {type: String, required:true},
@@ -17,8 +17,7 @@ const medicalInfo = new mongoose.Schema({
         previous_medical_conditions : {type: String, required:true},
         allergy : {type: String, required:true},
         intolerance : {type: String, required:true},
-        date_added:
-      {type:Date, required:false},
+        date_added: {type:Date, required:false},
 
        
 })

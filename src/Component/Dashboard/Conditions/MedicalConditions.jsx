@@ -16,9 +16,9 @@ import { HeartPulse } from 'lucide-react'
 export default function MedicalConditions() {
   
   const medicalInfo = useSelector(state => state.medical_info)
-  const bp_top = Number(medicalInfo == undefined || null ?medicalInfo.blood_pressure.split('/')[0]: 'N/A ')
-  const bp_bottom = Number(medicalInfo == undefined || null ?medicalInfo.blood_pressure.split('/')[1]: 'N/A ')
-
+  const bp_top = medicalInfo !== undefined || null ?Number(medicalInfo.blood_pressure.split('/')[0]): 'N/A '
+  const bp_bottom = medicalInfo !== undefined || null ?Number(medicalInfo.blood_pressure.split('/')[1]): 'N/A '
+  
     if(medicalInfo != null){
     return (
       <div className='flex flex-row bg-[#FAFBFB] h-full'>
@@ -103,7 +103,7 @@ export default function MedicalConditions() {
                   <p className='font-bold text-xl'>Body Temperature</p>
                  </div>
                  {
-                  medicalInfo.temperature >= 36.5 && medicalInfo.temperature <= 37.99 ? 
+                  medicalInfo.temperature >= 34.9 && medicalInfo.temperature <= 37.99 ? 
                   <p className='font-bold text-2xl text-green-500'>Normal</p>
                   : ''
                  }
@@ -136,13 +136,13 @@ export default function MedicalConditions() {
                  }
                  {
                   (bp_top <= 90) && (bp_bottom <= 60)?
-                  <p className='font-bold text-2xl text-green-500'>Hypotension (Below normal)</p>
+                  <p className='font-bold text-2xl text-red-500'>Hypotension (Below normal)</p>
                   : ''
            
                  }
                  {
                   (bp_top >= 120) && (bp_bottom >= 980)?
-                  <p className='font-bold text-2xl text-green-500'>Hypertension (Above normal)</p>
+                  <p className='font-bold text-2xl text-red-500'>Hypertension (Above normal)</p>
                   : ''
            
                  }

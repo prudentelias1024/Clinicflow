@@ -7,7 +7,7 @@ exports.get_medical_info = async(req,res) => {
         }, (err,medical_info) => {
             if(err){throw err}
             if(medical_info){
-                res.send({status: 200,medical_info:medical_info})
+                res.send({status: 200,medical_info:medical_info[0]})
             } else{
               res.send({status:404})   
             }
@@ -17,9 +17,10 @@ exports.get_medical_info = async(req,res) => {
 }
 
 exports.post_medical_info = async(req,res) => {
+    console.log('post body',req.body)
         medical_info = new medicalInfo({
                    user_id:req.body.patient_id,
-                   specialist: req.user.user_id,
+                   specialist: req.user._id,
                     blood_pressure:req.body.blood_pressure ,
                    blood_sugar:req.body.blood_sugar ,
                    blood_group:req.body.blood_group,
@@ -42,7 +43,7 @@ res.send({"status": 200})
 }
 
 exports.put_medical_info = async(req,res) => {
-        medical_info = medicalInfo.findOneAndReplace
+       medical_info = medicalInfo.findOneAndReplace
         ({
                    user_id:req.body.patient_id,
                    specialist: req.user.user_id,

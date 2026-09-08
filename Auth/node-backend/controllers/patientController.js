@@ -1,6 +1,6 @@
 const user = require('../schema/UserSchema')
 const medical_info = require('../schema/medicalInfoSchema')
-
+const mongoose = require('mongoose')
 
 exports.patient_medical_info = async(req,res) => {
     user.find({
@@ -24,10 +24,11 @@ exports.patient_medical_info = async(req,res) => {
 
 exports.get_my_patient = async(req,res) => {
     user.find({
-           assigned_specialist : req.body.user_id
-    }, (err,patients) => {
+           assigned_specialist : req.user._id
+    }).exec((err,patients) => {
         if(err){throw err}
         if(patients){
+            console.log(patients)
             res.send({status: 200,patients:patients})
         } else{
           res.send({status:404})   
@@ -40,9 +41,9 @@ exports.get_my_patient = async(req,res) => {
 }
 
 exports.remove_patient = async(req,res) => {
-    user.findOneAndReplace({
+    user.findOneAndUpdate({
            three_fa_id : req.body.user_id
-    },{assigned_specialist: None}, (err,patients) => {
+    }, {assigned_specialist: null}, (err,patients) => {
         if(err){throw err}
         if(patients){
             res.send({status: 200})
@@ -57,9 +58,11 @@ exports.remove_patient = async(req,res) => {
 
 
 exports.add_patient = async(req,res) => {
-    user.findOneAndReplace({
-           three_fa_id : req.body.user_id
-    },{assigned_specialist: req.user.user_id}, (err,patients) => {
+    const specialistId = mongoose.Types.ObjectId(req.user._id)
+    console.log(specialistId)
+    user.findOneAndUpdate({email : req.body.email
+
+    }, {$set:{assigned_specialist: specialistId}},{new:true}, (err,patients) => {
         if(err){throw err}
         if(patients){
             res.send({status: 200})
@@ -69,13 +72,15 @@ exports.add_patient = async(req,res) => {
     
 
     })
-
-
 }
 exports.not_my_patient = async(req,res) => {
+
   user.find({
-    assigned_specialist: '', three_fa_id: {$exclude: req.user.three_fa_id}}
-  ).exec(err,patients => {
+    $and: [
+      { assigned_specialist: null},
+      { email: { $ne: req.user.email } }
+    ]
+  }).exec((err,patients) => {
     if(err){throw err}
     if(patients){
         res.send({status: 200,patients:patients})

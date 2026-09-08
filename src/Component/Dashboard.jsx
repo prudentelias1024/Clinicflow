@@ -17,6 +17,8 @@ import {
   Ruler,
   User,
   Weight,
+  Building2, 
+  Stethoscope
 } from "lucide-react";
 import {  GiMedicines } from 'react-icons/gi'
 import human from '../human.jpg'
@@ -49,8 +51,6 @@ export default function Dashboard() {
   const [tests , setTests] = useState([])
   const [medicationsCount , setMedicationsCount] = useState(null)
   const [medications , setMedications] = useState([])
-  console.log(URL)
-
    const getDoneAppointments = async() => {
         let url = ''
         if(currentUser && currentUser.type == 'doctor'){
@@ -58,6 +58,7 @@ export default function Dashboard() {
          }else{
            url = `${URL}/api/appointments/done`
          }
+        
         
         const res =  (await axios.get(url,{headers: {Authorization: localStorage.getItem('access-token')}})).data
         if(res.status === 200){
@@ -159,7 +160,7 @@ const vitals = [
 const body = [
   { label: "Weight", value: `${medicalInfo == undefined || medicalInfo ==null  ? 'N/A' : medicalInfo.weight} kg`, icon: Weight },
   { label: "Height", value: `${medicalInfo == undefined || medicalInfo == null ? 'N/A' : medicalInfo.height}`, icon: Ruler },
-  { label: "BMI", value: `${medicalInfo !== undefined || medicalInfo == null ? 'N/A' : medicalInfo.bmi}`, icon: HeartPulse },
+  { label: "BMI", value: `${medicalInfo == undefined || medicalInfo == null ? 'N/A' : Number(medicalInfo.bmi).toFixed(1)}`, icon: HeartPulse },
 ];
 
 const profileFacts = [
@@ -169,6 +170,12 @@ const profileFacts = [
   { label: "Phone", value: currentUser !== null ? currentUser.phone_no : '', icon: Phone },
 ];
  
+const DocProfileFacts = [
+  { label: "Gender", value: currentUser.user_info !== undefined  || currentUser.user_info !== undefined? currentUser.user_info.gender : '', icon: User },
+   { label: "Department", value: currentUser !== null  ?currentUser.department : '', icon: Building2 },
+    { label: "Specialization", value: currentUser !== null ?currentUser.specialization : '', icon: Stethoscope },
+  { label: "Email", value: currentUser.user_info !== undefined ? currentUser.user_info.email : '', icon: Mail },
+]
    useEffect(() => {
     //  getUser()
     // navigator.mediaDevices.getUserMedia({video: true}).then(stream => {
@@ -176,7 +183,7 @@ const profileFacts = [
     //     track.stop()
     //   })
     // })
-    console.log(currentUser)
+    console.log(medicalInfo)
 
     if(currentUser !== null){
 
@@ -193,7 +200,7 @@ const profileFacts = [
     return (
       
     <div className='flex flex-row  font-[Outfit] bg-[#fafbfb] justify-between h-full'>
-    <SideNav />
+  <SideNav />
     <div className="animate-rise-in lg:ml-[17.5em] lg:pt-[4em]">
       <PageHeader
         icon={HeartPulse}
@@ -416,55 +423,81 @@ const profileFacts = [
   )
 }else {
   return (
-      <>
-      <div className='flex flex-row  font-[Outfit] bg-[#fafbfb] justify-between h-full'>
-    <SideNav />
-    <div className="dashboard ml-[15%] flex flex-col gap-[1em] justify-between">
-    <ProfileNavbar/>
-   
-    <div className="patients_stats flex flex-col">
+          
+    <div className='flex flex-row  font-[Outfit] bg-[#fafbfb] justify-between h-full'>
+  <SideNav />
+          <div className="animate-rise-in lg:ml-[17.5em] lg:pt-[4em]">
+      <PageHeader
+        icon={HeartPulse}
+        title={`Hello, Dr. ${ currentUser !==null  ? currentUser.user_info.full_name.split(" ")[0] : '' }`}
+        description="Here is a snapshot of your health record at the Clinicflow."
+      />
 
-    <p className="font-[Outfit] p-[1em] font-bold text-xl ml-[.5em]">Your Statistics </p> 
-    <div className="grid grid-cols-4 gap-[1em] ml-[2em] ">
-      <div className="total_patient flex flex-col bg-white rounded-md border shadow-sm  gap-[1em] w-[15em]">
-      <div className='inline-flex justify-between mr-[1em]'>
-    <p className="font-[Outfit] mt-[.5em]  font-bold text-base ml-[2em]">Total Patient </p> 
-    <AiOutlineUser className='mt-[.5em] text-xl' />
-      </div>
-      <p className="font-[Outfit] ml-[2em] mb-[1em]  font-bold text-xl ">{patientsCount} </p> 
-   
-      </div>
-      <div className="total_patient flex flex-col bg-white rounded-md border shadow-sm  gap-[1em] w-[15em]">
-      <div className='inline-flex justify-between mr-[1em]'>
-    <p className="font-[Outfit] mt-[.5em]  font-bold text-base ml-[2em]">Total Appoinment </p> 
-    <AiOutlineUser className='mt-[.5em] text-xl' />
-      </div>
-      <p className="font-[Outfit] ml-[2em] mb-[1em]  font-bold text-xl ">
-        {appointmentCount} </p> 
-   
-      </div>
-      
-      <div className="total_patient flex flex-col bg-white rounded-md border shadow-sm  gap-[1em] w-[15em]">
-      <div className='inline-flex justify-between mr-[1em]'>
-    <p className="font-[Outfit] mt-[.5em]  font-bold text-base ml-[2em]">Total Test Done </p> 
-    <AiOutlineUser className='mt-[.5em] text-xl' />
-      </div>
-      <p className="font-[Outfit] ml-[2em] mb-[1em]  font-bold text-xl ">{testsCount} </p> 
-   
+      {/* Stats */}
+      <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
+        {stats.map(({ label, value, icon: Icon }) => (
+          <div
+            key={label}
+            className="card-hover-lift rounded-2xl border border-border bg-card p-5"
+          >
+            <div className="flex items-center justify-between">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <Icon className="h-5 w-5" />
+              </span>
+              <span className="font-display text-3xl font-bold text-foreground">
+                {value}
+              </span>
+            </div>
+            <p className="mt-3 text-sm font-semibold text-muted-foreground">
+              {label}
+            </p>
+          </div>
+        ))}
       </div>
 
-      <div className="total_patient flex flex-col bg-white rounded-md border shadow-sm  gap-[1em] w-[15em]">
-      <div className='inline-flex justify-between mr-[1em]'>
-    <p className="font-[Outfit] mt-[.5em]  font-bold text-base ml-[2em]">Total Medication Prescribed </p> 
-    <AiOutlineUser className='mt-[.5em] text-xl' />
-      </div>
-      <p className="font-[Outfit] ml-[2em] mb-[1em]  font-bold text-xl ">{medicationsCount} </p> 
-   
-      </div>
-      
-      
-    </div>
-    </div>
+      <div className="mt-8 grid gap-6 lg:grid-cols-5">
+        {/* Left column: profile + appointments */}
+        <div className="flex flex-col gap-6 lg:col-span-3">
+          {/* Profile card */}
+          <section className="rounded-2xl border border-border bg-card p-6">
+            <div className="flex flex-wrap items-center gap-4">
+              <span className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-xl font-bold text-primary-foreground">
+                {currentUser.user_info.full_name
+                  .split(" ")
+                  .map((p) => p[0])
+                  .slice(0, 2)
+                  .join("")}
+              </span>
+              <div>
+                <h2 className="font-display text-xl font-bold text-foreground">
+                  {currentUser.user_info.full_name}
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  {currentUser.user_info._id} · Blood group {medicalInfo == undefined || medicalInfo ==null ? 'N/A' : medicalInfo.blood_group} ·{" "}
+                  {medicalInfo == undefined || medicalInfo ==null ? 'N/A' : medicalInfo.genotype}
+                </p>
+              </div>
+            </div>
+            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {DocProfileFacts.map(({ label, value, icon: Icon }) => (
+                <div key={label} className="flex items-center gap-3">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-secondary text-primary">
+                    <Icon className="h-4 w-4" />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="text-xs font-semibold text-muted-foreground">
+                      {label}
+                    </p>
+                    <p className="truncate capitalize text-sm font-bold text-foreground">
+                      {value}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+      {/* <div className='flex flex-row  font-[Outfit] bg-[#fafbfb] justify-between h-full'> */}
  
     <div className="patients flex flex-col ml-[1em]">
   <p className="font-semibold text-lg mt-1 ml-[1em] mb-[1em] ">Appointments</p>
@@ -496,7 +529,9 @@ patients != null && patients.length > 0 ?
    
     </div>
     </div>
-      </>
+    </div>
+    </div>
+      
   )
 }
      }else {

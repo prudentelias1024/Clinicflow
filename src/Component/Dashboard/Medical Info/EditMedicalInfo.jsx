@@ -14,7 +14,10 @@ export default function EditMedicalInfo() {
     if(res.status == 200){
 
       setMedicalInfo(res.medical_info)
-      setAlreadyAdded(true)
+      if(res.medical_info.bmi !== undefined || res.medical_info.bmi !== null || res.medical_info.bmi !== ''){
+        setAlreadyAdded(true)
+      }
+     console.log('medical info',res.medical_info)
       console.log(res.medical_info);
       bloodPressureRef.current.value = res.medical_info.blood_pressure == 'None' ? '' : res.medical_info.blood_pressure
 
@@ -73,25 +76,25 @@ export default function EditMedicalInfo() {
        const allergy = allergyRef.current.value
        const intolerance = intoleranceRef.current.value
        const bmi = weight / ((height / 100) * ( height/ 100))
-       let formData = new FormData()
-       formData.append('blood_pressure',blood_pressure)
-       formData.append('blood_sugar',blood_sugar)
-       formData.append('blood_group',blood_group)
-       formData.append('genotype',genotype)
-       formData.append('cholesterol',cholesterol)
-       formData.append('pulse',pulse)
-       formData.append('weight',weight)
-       formData.append('height',height)
-       formData.append('temperature',temperature)
-       formData.append('current_medical_conditions',current_medical_conditions)
-       formData.append('previous_medical_conditions',previous_medical_conditions)
-       formData.append('allergy',allergy)
-       formData.append('intolerance',intolerance)
-       formData.append('bmi',bmi)
-       formData.append('specialist_id',location.state.docId)
-       formData.append('patient_id',location.state.patientId)
+      
        if(alreadyAdded){
-       const res = await (await axios.put(`${URL}/api/medicalInfo`, formData, {headers: { Authorization: localStorage.getItem('access-token')}})).data
+       const res = await (await axios.put(`${URL}/api/medicalInfo`, {
+       
+         blood_pressure,
+         blood_sugar,
+         blood_group,
+         genotype,
+         cholesterol,
+         pulse,
+         weight,
+         height,
+         temperature,
+         current_medical_conditions,
+         previous_medical_conditions,
+         allergy,
+         intolerance,
+         bmi
+       }, {headers: { Authorization: localStorage.getItem('access-token')}})).data
        if(res.status === 200){
          setAddedSuccessfully(true)
          setTimeout(() => {
@@ -102,7 +105,23 @@ export default function EditMedicalInfo() {
        }
      }
      else {
-      const res = await (await axios.post(`${URL}/api/medicalInfo`, formData, {headers: { Authorization: localStorage.getItem('access-token')}})).data
+      const res = await (await axios.post(`${URL}/api/medicalInfo`, {
+         patient_id: location.state.patientId,
+         blood_pressure,
+         blood_sugar,
+         blood_group,
+         genotype,
+         cholesterol,
+         pulse,
+         weight,
+         height,
+         temperature,
+         current_medical_conditions,
+         previous_medical_conditions,
+         allergy,
+         intolerance,
+         bmi
+       }, {headers: { Authorization: localStorage.getItem('access-token')}})).data
        if(res.status === 200){
          setAddedSuccessfully(true)
          setTimeout(() => {
@@ -140,75 +159,75 @@ return (
    <div  className='flex flex-wrap gap-[3em]'>
    
    <div className="text-[#7e7d7d]">
-    <label class="font-[Outfit] text-[1em]  text-[#7e7d7d]" for="bp">Patient Blood Pressure</label> 
+    <label class="font-[Outfit] text-[1em]  text-[#7e7d7d]" >Patient Blood Pressure</label> 
     <input ref={bloodPressureRef} class="w-full  h-8 rounded-md border font-[Outfit] lg:p-4  font-bold placehold:font-normal" placeholder="Enter Patient blood pressure reading"  type="text" name="patient_bp" />
    </div>
 
 
    <div className="text-[#7e7d7d]">
-    <label class="font-[Outfit] text-[1em]  text-[#7e7d7d]" for="bs">Patient Blood Sugar</label> 
+    <label class="font-[Outfit] text-[1em]  text-[#7e7d7d]" >Patient Blood Sugar</label> 
     <input ref={bloodSugarRef} class="w-full  h-8 rounded-md border font-[Outfit] lg:p-4  font-bold placehold:font-normal" placeholder="Enter Patient Blood Sugar reading "  type="text" name="patient_bs" />
    </div>
 
 
    <div className="text-[#7e7d7d]">
-    <label class="font-[Outfit] text-[1em]  text-[#7e7d7d]" for="bs">Patient Blood Group</label> 
+    <label class="font-[Outfit] text-[1em]  text-[#7e7d7d]" >Patient Blood Group</label> 
     <input ref={bloodGroupRef} class="w-full  h-8 rounded-md border font-[Outfit] lg:p-4  font-bold placehold:font-normal" placeholder="Enter Patient Blood Group "  type="text" name="patient_bg" />
    </div>
 
    <div className="text-[#7e7d7d]">
-    <label class="font-[Outfit] text-[1em]  text-[#7e7d7d]" for="bs">Patient Genotype </label> 
+    <label class="font-[Outfit] text-[1em]  text-[#7e7d7d]" >Patient Genotype </label> 
     <input ref={genotypeRef} class="w-full  h-8 rounded-md border font-[Outfit] lg:p-4  font-bold placehold:font-normal" placeholder="Enter Patient's genotype "  type="text" name="patient_genotype" />
    </div>
 
    <div className="text-[#7e7d7d]">
-    <label class="font-[Outfit] text-[1em]  text-[#7e7d7d]" for="bs">Patient Cholesterol Level </label> 
+    <label class="font-[Outfit] text-[1em]  text-[#7e7d7d]" >Patient Cholesterol Level </label> 
     <input ref={cholesterolRef} class="w-full  h-8 rounded-md border font-[Outfit] lg:p-4  font-bold placehold:font-normal" placeholder="Enter Patient's Cholesterol Level "  type="text" name="patient_cholesterol" />
    </div>
 
    <div className="text-[#7e7d7d]">
-    <label class="font-[Outfit] text-[1em]  text-[#7e7d7d]" for="bs">Patient Pulse Rate </label> 
+    <label class="font-[Outfit] text-[1em]  text-[#7e7d7d]" >Patient Pulse Rate </label> 
     <input ref={pulseRef} class="w-full  h-8 rounded-md border font-[Outfit] lg:p-4  font-bold placehold:font-normal" placeholder="Enter Patient's Pulse rate "  type="text" name="patient_pulse_rate" />
    </div>
 
 
    <div className="text-[#7e7d7d]">
-    <label class="font-[Outfit] text-[1em]  text-[#7e7d7d]" for="bs">Patient Weight </label> 
+    <label class="font-[Outfit] text-[1em]  text-[#7e7d7d]" >Patient Weight </label> 
     <input ref={weightRef} class="w-full  h-8 rounded-md border font-[Outfit] lg:p-4  font-bold placehold:font-normal" placeholder="Enter Patient's weight reading"  type="text" name="patient's weight" />
    </div>
 
    <div className="text-[#7e7d7d]">
-    <label class="font-[Outfit] text-[1em]  text-[#7e7d7d]" for="bs">Patient Height </label> 
+    <label class="font-[Outfit] text-[1em]  text-[#7e7d7d]" >Patient Height </label> 
     <input ref={heightRef} class="w-full  h-8 rounded-md border font-[Outfit] lg:p-4  font-bold placehold:font-normal" placeholder="Enter Patient's height reading"  type="text" name="patient's height" />
    </div>
 
 
    <div className="text-[#7e7d7d]">
-    <label class="font-[Outfit] text-[1em]  text-[#7e7d7d]" for="bs">Patient's Temperature </label> 
+    <label class="font-[Outfit] text-[1em]  text-[#7e7d7d]" >Patient's Temperature </label> 
     <input ref={temperatureRef} class="w-full  h-8 rounded-md border font-[Outfit] lg:p-4  font-bold placehold:font-normal" placeholder="Enter Patient's temperature "  type="text" name="patient's temperature" />
    </div>
 
 
    <div className="text-[#7e7d7d]">
-    <label class="font-[Outfit] text-[1em]  text-[#7e7d7d]" for="bs">Patient's Current Medical Conditions </label> 
+    <label class="font-[Outfit] text-[1em]  text-[#7e7d7d]" >Patient's Current Medical Conditions </label> 
     <textarea ref={currentMedConditionRef} class="w-full  h-32 rounded-md border font-[Outfit] lg:p-4  font-bold placehold:font-normal" placeholder="Seperate with ,  "  type="text" name="patient's current medical conditions" >
       </textarea>
    </div>
 
    <div className="text-[#7e7d7d]">
-    <label class="font-[Outfit] text-[1em]  text-[#7e7d7d]" for="bs">Patient's Previous Medical Conditions </label> 
+    <label class="font-[Outfit] text-[1em]  text-[#7e7d7d]" >Patient's Previous Medical Conditions </label> 
     <textarea ref={prevMedConditionRef} class="w-full  h-32 rounded-md border font-[Outfit] lg:p-4  font-bold placehold:font-normal" placeholder="Seperate with ,"  type="text" name="patient's past medical coniditons" >
       </textarea>
    </div>
 
    <div className="text-[#7e7d7d]">
-    <label class="font-[Outfit] text-[1em]  text-[#7e7d7d]" for="bs">Patient's  Allergies </label> 
+    <label class="font-[Outfit] text-[1em]  text-[#7e7d7d]" >Patient's  Allergies </label> 
     <textarea ref={allergyRef} class="w-full  h-32 rounded-md border font-[Outfit] lg:p-4  font-bold placehold:font-normal" placeholder="Seperate with ,"  type="text" name="patient's past medical conditions" >
       </textarea>
    </div>
 
    <div className="text-[#7e7d7d]">
-    <label class="font-[Outfit] text-[1em]  text-[#7e7d7d]" for="bs">Patient's  Intolerance </label> 
+    <label class="font-[Outfit] text-[1em]  text-[#7e7d7d]" >Patient's  Intolerance </label> 
     <textarea ref={intoleranceRef} class="w-full  h-32 rounded-md border font-[Outfit] lg:p-4  font-bold placehold:font-normal" placeholder="Seperate with ,"  type="text" name="patient's past medical " >
       </textarea>
    </div>

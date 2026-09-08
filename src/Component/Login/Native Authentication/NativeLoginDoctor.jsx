@@ -42,6 +42,7 @@ export default function NativeLoginDoctor() {
     } else {
       if(res.access_token){
       localStorage.setItem('access-token',res.access_token)
+      console.log(res.user)
       dispatch(actions.updateUser(res.user))
      
       navigate('/Dashboard')

@@ -71,16 +71,16 @@ export default function Doctors() {
 
       {/* test section */}
       {
-        doctors !== null && doctors.length > 0 ?
+        doctors !== null  && doctors.length > 0 ?
         doctors.map((doctor) => {
-          return   <div className="test_done border rounded-md w-[98%]   bg-white grid grid-cols-4 p-[.5em]">
+          return   <div className="test_done border rounded-md w-[95%]   bg-white grid grid-cols-4 p-[.5em]">
           <div className='inline-flex'>
-            <img src={`${URL}/api`+doctor.user_id.profile_img} alt='patient_image' className='h-[1.5em] w-[1.5em] rounded-full'/>
-            <p className="font-semibold ml-3 text-sm">{doctor.user_id.full_name}</p>
+            <img src={`${URL}/api`+ doctor.user_info.profile_img} alt='patient_image' className='h-[1.5em] w-[1.5em] rounded-full'/>
+            <p className="font-semibold ml-3 text-sm">{doctor.user_info.full_name}</p>
           </div>
           <p className="font-semibold text-sm">{doctor.department}</p>
           <p className="font-semibold text-sm">{doctor.specialization}</p>
-          <p onClick={goToAppointmentCreator} ref={docIdRef}  value={doctor.user_id.three_fa_id}  className='text-purple-500 cursor-pointer font-bold text-sm ml-[-4em]   '>Book Appointment</p> 
+          <p onClick={goToAppointmentCreator} ref={docIdRef}  value={doctor.user_info.three_fa_id}  className='text-purple-500 cursor-pointer font-bold text-sm ml-[-4em]   '>Book Appointment</p> 
         </div>
      
         }): ''
