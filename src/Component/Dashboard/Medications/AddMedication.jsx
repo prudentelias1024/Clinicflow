@@ -16,7 +16,6 @@ export default function AddMedication() {
   const manufacturerRef = useRef()
   const [addedSuccessfully,setAddedSuccessfully] = useState(false)
   const navigate = useNavigate()
-  console.log(location.state)
   const submitMedication = async() => {
     const name = nameRef.current.value
     const reason = reasonRef.current.value
@@ -35,13 +34,23 @@ export default function AddMedication() {
     formData.append('manufacturer',manufacturer)
     formData.append('specialist_id',location.state.docId)
     formData.append('patient_id',location.state.patientId)
-    const res = await (await axios.post(`${URL}/api/medications`, formData, {headers: { Authorization: localStorage.getItem('access-token')}})).data
+    const res = await (await axios.post(`${URL}/api/medications`, {
+      name: name, 
+      reason: reason,
+      description: description,
+      possible_allergies: possible_allergies,
+      type: type,
+      dosage:dosage,
+      manufacturer: manufacturer,
+      prescribed_to:location.state.patientId,
+      prescribed_by: location.state.docId
+    }, {headers: { Authorization: localStorage.getItem('access-token')}})).data
     if(res.status === 200){
       setAddedSuccessfully(true)
       setTimeout(() => {
-        navigate('/Dashboard')
+        navigate('/Dashboard/Medications')
 
-      }, 3000);
+      }, 5000);
 
     }
   }

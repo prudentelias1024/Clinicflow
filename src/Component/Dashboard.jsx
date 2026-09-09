@@ -183,6 +183,10 @@ const DocProfileFacts = [
     //     track.stop()
     //   })
     // })
+    if(localStorage.getItem('access-token') == null){
+      navigate('/nativeLogin')
+    }
+  
     console.log(medicalInfo)
 
     if(currentUser !== null){

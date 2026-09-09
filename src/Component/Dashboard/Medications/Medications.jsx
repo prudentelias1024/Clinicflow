@@ -13,6 +13,7 @@ export default function Medications() {
     const [medications, setMedications] = useState([])
       
    const getMedications = async() => {
+    console.log(user.type)
     let url = ''
     if(user && user.type == 'patient'){
       url = `${URL}/api/medications`
@@ -24,6 +25,7 @@ export default function Medications() {
     const res =  (await axios.get(url,{headers: {Authorization: localStorage.getItem('access-token')}})).data
     console.log(res)
     if(res.status === 200){
+   
       setMedications(res.medications)
      } 
   
@@ -32,7 +34,11 @@ export default function Medications() {
 
 
     useEffect(() => {
+      if(user!== null){
+
+      
      getMedications()
+      }
     }, [])
     
   return (
@@ -72,8 +78,8 @@ export default function Medications() {
       medications !== undefined && medications.length > 0 && medications.map((medication) => {
         return    <div className="test_done grid grid-cols-5 pl-[1.5em]">
               <div className='inline-flex'>
-            <img src={"http://localhost:8000/api"+ medication.prescribed_by.user_id.profile_img} alt='doctor_image' className='h-[2em] w-[2em] rounded-full'/>
-            <p className="font-semibold text-sm ml-[.5em] mt-[.25em]">{medication.prescribed_by.user_id.full_name}</p>
+            <img src={"http://localhost:8000/api"+ medication.prescribed_by.profile_img} alt='doctor_image' className='h-[2em] w-[2em] rounded-full'/>
+            <p className="font-semibold text-sm ml-[.5em] mt-[.25em]">{medication.prescribed_by.user_info.full_name}</p>
           </div>
   
         <p className="font-semibold text-sm">{medication.name}</p>

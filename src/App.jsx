@@ -44,7 +44,7 @@ function App() {
     if(res.user){
       dispatch(actions.updateUser(res.user))
       setUser(res.user)
-      navigate('/Dashboard')
+      // navigate('/Dashboard')
    
      }
     //  } catch(err){
@@ -58,9 +58,7 @@ function App() {
     }
   }
   const getMedicalInfo = async() => {
-    console.log(user)
     const res = await(await axios.get(`${URL}/api/medicalInfo`, {headers: {Authorization: localStorage.getItem('access-token')}})).data
-    console.log(res)
     dispatch(actions.updateMedicalInfo(res.medical_info))
   }
    useEffect(() => {
