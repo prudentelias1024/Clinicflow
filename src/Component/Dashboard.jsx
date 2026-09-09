@@ -171,10 +171,10 @@ const profileFacts = [
 ];
  
 const DocProfileFacts = [
-  { label: "Gender", value: currentUser.user_info !== undefined  || currentUser.user_info !== undefined? currentUser.user_info.gender : '', icon: User },
+  { label: "Gender", value: currentUser !== null && currentUser.user_info !== undefined  ? currentUser.user_info.gender : '', icon: User },  
    { label: "Department", value: currentUser !== null  ?currentUser.department : '', icon: Building2 },
     { label: "Specialization", value: currentUser !== null ?currentUser.specialization : '', icon: Stethoscope },
-  { label: "Email", value: currentUser.user_info !== undefined ? currentUser.user_info.email : '', icon: Mail },
+  { label: "Email", value: currentUser !== null && currentUser.user_info !== undefined ? currentUser.user_info.email : '', icon: Mail },
 ]
    useEffect(() => {
     //  getUser()
