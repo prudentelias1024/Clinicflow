@@ -122,7 +122,7 @@ function AppointmentCard({appointment,done,}) {
       <PageHeader
         icon={CalendarCheck}
         title="Appointments"
-        description="Your upcoming visits and appointment history at the LASU Health Centre."
+        description="Your upcoming visits and appointment history at Clinicflow."
       />
 
       <section>
