@@ -78,7 +78,7 @@ export default function Medications() {
       medications !== undefined && medications.length > 0 && medications.map((medication) => {
         return    <div className="test_done grid grid-cols-5 pl-[1.5em]">
               <div className='inline-flex'>
-            <img src={"http://localhost:8000/api"+ medication.prescribed_by.profile_img} alt='doctor_image' className='h-[2em] w-[2em] rounded-full'/>
+            <img src={ URL+ medication.prescribed_by.profile_img} alt='doctor_image' className='h-[2em] w-[2em] rounded-full'/>
             <p className="font-semibold text-sm ml-[.5em] mt-[.25em]">{medication.prescribed_by.user_info.full_name}</p>
           </div>
   
