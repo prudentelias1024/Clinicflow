@@ -205,7 +205,7 @@ const DocProfileFacts = [
       
     <div className='flex flex-row  font-[Outfit] bg-[#fafbfb] justify-between h-full'>
   <SideNav />
-    <div className="animate-rise-in lg:ml-[17.5em] lg:pt-[4em]">
+    <div className="animate-rise-in lg:ml-[17.5em] pt-[2em] lg:pt-[4em]">
       <PageHeader
         icon={HeartPulse}
         title={`Hello, ${ currentUser !==null  ? currentUser.full_name.split(" ")[0] : '' }`}

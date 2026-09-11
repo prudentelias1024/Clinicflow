@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { MdSpaceDashboard } from "react-icons/md";
 import { AiOutlineCalendar, AiOutlineClockCircle } from "react-icons/ai";
 import { GiHypodermicTest, GiMedicines } from "react-icons/gi";
@@ -7,11 +7,36 @@ import { FaFirstAid, FaHospitalUser, FaUserAlt, FaUserNurse } from "react-icons/
 import { FiSettings } from "react-icons/fi";
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { Menu, CircleX  } from 'lucide-react';
+
+
 export default function SideNav() {
+  const [mobileNav, setMobileNav] = useState(false)
   const user = useSelector(state =>state.currentUser)
+  const toggleNav = () => {
+    setMobileNav(!mobileNav)
+    console.log(mobileNav)
+  }
   return (
     <>
-    <div className=" flex-col gap-[2em] w-[15%] h-full p-[2em] hidden lg:flex fixed  bg-blue-500 text-white">
+    <div onClick={toggleNav} className='lg:hidden fixed top-[1em] left-[1em] z-20'>
+ <CircleX className="text-white text-5xl mt-[.5em] lg:hidden ml-[5em] fixed"/> 
+  </div>
+  
+   <div onClick={toggleNav} className='lg:hidden fixed top-[1em] left-[1em] z-20'>
+  <Menu  className={mobileNav ? "text-white text-5xl mt-[.5em] lg:hidden ml-[.35em] fixed" : "text-5xl mt-[.5em] lg:hidden ml-[.35em] fixed"}/>
+    </div>
+   
+    
+    
+
+   
+
+
+    <div className={mobileNav ? "z-10 flex-col gap-[2em] w-[50%] h-full p-[2em] flex  fixed  bg-blue-500 text-white" : " z-0 flex-col gap-[2em] w-[15%] h-full p-[2em] hidden lg:flex fixed  bg-blue-500 text-white"}>
+
+     
+
         <Link to="/Dashboard" className=' inline-flex gap-[1em] font-[Outfit] mt-[3em]'>
         <MdSpaceDashboard className='text-2xl text-white' />
         <p className="">Dashboard</p>
