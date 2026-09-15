@@ -73,7 +73,7 @@ export default function Doctors() {
       {
         doctors !== null  && doctors.length > 0 ?
         doctors.map((doctor) => {
-          return   <div className="test_done border rounded-md w-[95%]   bg-white grid grid-cols-4 p-[.5em]">
+          return   <div className="test_done border rounded-b-md w-[93.8%] ml-[2.2em]  bg-white grid grid-cols-4 p-[.5em]">
           <div className='inline-flex'>
             <img src={`${URL}/api`+ doctor.user_info.profile_img} alt='patient_image' className='h-[1.5em] w-[1.5em] rounded-full'/>
             <p className="font-semibold ml-3 text-sm">{doctor.user_info.full_name}</p>

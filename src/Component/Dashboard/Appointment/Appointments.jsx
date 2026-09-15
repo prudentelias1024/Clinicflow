@@ -10,6 +10,7 @@ import AppointmentDone from './AppointmentDone'
 import axios from 'axios'
 
 import { PageHeader } from "../DashboardShell";
+import moment from 'moment'
 
 import { CalendarCheck, CalendarDays, CheckCircle2, MapPin } from "lucide-react";
 export default function Appointments() {
@@ -85,6 +86,21 @@ function AppointmentCard({appointment,done,}) {
             <CalendarDays className="h-5 w-5" />
           )}
         </span>
+
+         <span
+          className={
+            appointment.appointment_status == 'pending'
+              ? "rounded-full bg-yellow-300 px-3 capitalize ml-[1.5em] py-1 text-xs font-bold text-white"
+              :
+                appointment.appointment_status == 'accepted'?
+              "rounded-full bg-green-300 px-3 capitalize ml-[1.5em] py-1 text-xs font-bold text-white":
+              
+              "bg-red-300 px-3 capitalize ml-[1.5em] py-1 text-xs font-bold text-white"
+          }
+        >
+          {  appointment.appointment_status !== null? appointment.appointment_status : ''}
+        </span>
+
         <span
           className={
             done
@@ -96,19 +112,19 @@ function AppointmentCard({appointment,done,}) {
         </span>
       </div>
       <h3 className="mt-4 font-display text-base font-bold text-foreground">
-        {appointment.title}
+        {appointment.reason}
       </h3>
       <p className="text-sm font-semibold text-primary">
-        {appointment.specialization}
+        {appointment.specialist.specialization}
       </p>
-      <p className="mt-1 text-sm text-muted-foreground">{appointment.doctor}</p>
+      <p className="mt-1 text-sm text-muted-foreground">{appointment.specialist.user_info.full_name}</p>
       <div className="mt-4 border-t border-border pt-3 text-sm text-muted-foreground">
         <p className="font-semibold text-foreground">
-          {appointment.date} · {appointment.startTime} – {appointment.endTime}
+          {moment(appointment.appointment_start_time).format("ddd, MMM D")} · {moment(appointment.appointment_start_time).format('hh:mm A')} 
         </p>
         <p className="mt-1 flex items-center gap-1.5">
           <MapPin className="h-3.5 w-3.5 text-primary" />
-          {appointment.location}
+          Clinicflow
         </p>
       </div>
     </article>
